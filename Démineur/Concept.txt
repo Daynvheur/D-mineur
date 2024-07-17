@@ -1,0 +1,11 @@
+Concept :
+Une fenêtre contenant le plateau de jeu d'une taille de X par Y cases masquées
+Activer (=cliquer gauche souris sur) une case masquée la démasque
+Activer une case démasquée :
+- sans effet si vide
+- drapeau si le nombre de bombes correspond aux cases masquées adjacentes
+- activer les cases masquées adjacentes si nombre de drapeaux déjà correct
+Les mines ne sont pas pré-générées (utilisation d'une graine de génération en continu)
+Seules les cases adjacentes à une case démasquées sont choisies en bombes ou non (cases dites frontières)
+Moins il y a de cases masquées non-frontières sur le plateau, plus  Une case masquée aléatoire sur le plateau a de chances d'être une bombe
+Le compteur d'aléatoire n'est incrémenté qu'à chaque démasque de case, et doit se faire toujours dans le même ordre (2 parties identiques avec la même graines si les cases dévoilées sont dans le même ordre)
