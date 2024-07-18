@@ -15,8 +15,8 @@ public class Case
 {
 	private static int population = 0; //Déclaration d'existence dans la population
 
-	public static int Size_x { get; set; } = 12 * 4;
-	public static int Size_y { get; set; } = 12 * 4;
+	public static int Size_x { get; set; } = 12 * 2;
+	public static int Size_y { get; set; } = 12 * 2;
 
 	//private static int nbVoisines = 0;
 	public bool isHidden = true; //La case n'est pas dévoilée
@@ -88,5 +88,20 @@ public class Case
 			isMarked = isMarked,
 			Image = (Image)pictBox.Image.Clone()
 		};
+	}
+
+	public void Refresh()
+	{
+		if (isHidden) return;
+		Image = !isMined ? Image.FromFile(imgDir + HasMineVoisines + ".png") : Image.FromFile(imgDir + "m.png");
+	}
+
+	internal void Démine()
+	{
+		isMined = false;
+		isMarked = false;
+		isHidden = false;
+		Refresh();
+		Voisines.ForEach(c => c.Refresh());
 	}
 }
