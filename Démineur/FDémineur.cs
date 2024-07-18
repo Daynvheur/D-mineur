@@ -21,6 +21,7 @@ public partial class FDémineur : Form
 	public void ResetGame()
 	{
 		Plateau.LPlateau.ToList().ForEach(c => c.Restore());
+		Plateau.M = Plateau.LPlateau.Count(c => c.isMined);
 		ClientSize = new Size(Plateau.X * Case.Size_x, Plateau.Y * Case.Size_y + ssMines.Height); //redimension de la zone visible
 
 		tsslGameOver.Visible = false;
@@ -49,34 +50,11 @@ public partial class FDémineur : Form
 		switch (mouse.Button)
 		{
 			case MouseButtons.Right:
-				if (@case.isHidden)
-					if (@case.isMarked) @case.Demarque();
-					else @case.Marque();
+				Plateau.Interaction2(@case);
 
 				break;
 			case MouseButtons.Left:
-				if (@case.isHidden && !@case.isMarked)
-				{
-					RevealCase(@case);
-					if (@case.isMined) tsslReste.Text = "0"; //GameOver (raccourci)
-				}
-				else
-				{
-					//Récupération du nombre de cases alentours voilées et marquées
-					int id_y = id % Plateau.X;
-
-					var lookupHiddenMarked = @case.Voisines.Where(c => c.isHidden).ToLookup(c => c.isMarked);
-					int voisinesVoilées = lookupHiddenMarked[false].Count();
-					int voisinesMarquées = lookupHiddenMarked[true].Count();
-
-					//Si le nombre de voilées (augmenté de celles déjà marquées) correspond aux voisines, marquer les voilées voisines
-					if (voisinesVoilées + voisinesMarquées == @case.HasMineVoisines) lookupHiddenMarked[false].ToList().ForEach(c => c.Marque());
-					//Sinon, si le nombre de marquées correspond déjà aux voisines, dévoiler les manquantes
-					else if (voisinesMarquées == @case.HasMineVoisines) lookupHiddenMarked[false].ToList().ForEach(RevealCase);
-				}
-				List<Case> plateauVoilées = Plateau.LPlateau.Where(c => c.isHidden).ToList();
-				//Si toutes les cases restantes sont minées, les marquer
-				if (plateauVoilées.Count == Plateau.M) plateauVoilées.ForEach(c => c.Marque());
+				Plateau.Interaction1(@case);
 
 				break;
 			default:
@@ -84,17 +62,9 @@ public partial class FDémineur : Form
 		}
 
 		int plateauMarquées = Plateau.LPlateau.Where(c => c.isMarked).Count();
-		if (plateauMarquées == Plateau.M) Plateau.LPlateau.Where(c => c.isHidden && !c.isMarked).ToList().ForEach(c => c.Reveal());
+		if (plateauMarquées == Plateau.LPlateau.Count(c => c.isMined)) Plateau.LPlateau.Where(c => c.isHidden && !c.isMarked).ToList().ForEach(c => c.Reveal());
 		tspbReste.Value = plateauMarquées;
-		tsslReste.Text = (Plateau.M - plateauMarquées).ToString();
-	}
-
-	public static void RevealCase(Case @case)
-	{
-		@case.Reveal(); //Dévoiler celle-ci
-		if (@case.HasMineVoisines != 0) return; //S'il y a des mines dans le voisinage, s'arrêter là
-
-		@case.Voisines.Where(c => c.isHidden && !c.isMarked).ToList().ForEach(RevealCase);
+		tsslReste.Text = (Plateau.LPlateau.Count(c => c.isMined && c.isHidden) - plateauMarquées).ToString();
 	}
 
 	private void FDémineur_KeyPress(object sender, KeyPressEventArgs e)
