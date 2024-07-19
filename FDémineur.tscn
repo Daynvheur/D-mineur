@@ -1,12 +1,15 @@
-[gd_scene format=3 uid="uid://br32jtvcb04mx"]
+[gd_scene load_steps=2 format=3 uid="uid://br32jtvcb04mx"]
 
-[node name="Control" type="Control"]
+[ext_resource type="Script" path="res://Démineur/FDémineur.cs" id="1_rq7g7"]
+
+[node name="FDémineur" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rq7g7")
 
 [node name="Timer" type="Timer" parent="."]
 
@@ -24,20 +27,24 @@ grow_vertical = 0
 layout_mode = 2
 text = "Mines restantes : 
 "
+max_lines_visible = 1
 
 [node name="tsslReste" type="Label" parent="ssMines"]
 layout_mode = 2
 text = "56"
+max_lines_visible = 1
 
 [node name="tsslSep" type="Label" parent="ssMines"]
 layout_mode = 2
 text = "/
 "
+max_lines_visible = 1
 
 [node name="tsslTotal" type="Label" parent="ssMines"]
 layout_mode = 2
 text = "200
 "
+max_lines_visible = 1
 
 [node name="ProgressBar" type="ProgressBar" parent="ssMines"]
 custom_minimum_size = Vector2(117, 18)
@@ -47,12 +54,16 @@ size_flags_vertical = 1
 max_value = 200.0
 step = 1.0
 value = 144.0
+allow_greater = true
 
 [node name="tsslGameOver" type="Label" parent="ssMines"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
 text = "GameOver !"
+max_lines_visible = 1
 
 [node name="tsslTemps" type="Label" parent="ssMines"]
 layout_mode = 2
 text = "(Temps écoulé)"
+max_lines_visible = 1

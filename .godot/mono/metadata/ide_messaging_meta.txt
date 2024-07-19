@@ -1,2 +1,2 @@
-﻿63030
-E:/SteamLibrary/steamapps/common/Godot Engine/godot.windows.opt.tools.64.exe
+﻿62938
+C:/Users/GweltazLEMARTRET/OneDrive - Hellowork/Privé/Godot/Godot_v4.3-beta3_mono_win64/Godot_v4.3-beta3_mono_win64.exe

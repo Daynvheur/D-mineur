@@ -1,6 +1,6 @@
 namespace Démineur;
 
-public partial class FDémineur : Form
+public partial class FDémineur
 {
 	private int Seconds = 0;
 

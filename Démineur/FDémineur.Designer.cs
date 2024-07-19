@@ -1,6 +1,9 @@
-﻿namespace Démineur;
+//#define GODOT
+#if GODOT
+#else
+namespace Démineur;
 
-partial class FDémineur
+partial class FDémineur : System.Windows.Forms.Form
 {
 	/// <summary>
 	/// Required designer variable.
@@ -44,13 +47,13 @@ partial class FDémineur
 		// ssMines
 		// 
 		this.ssMines.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsslMines,
-            this.tsslReste,
-            this.tsslSep,
-            this.tsslTotal,
-            this.tspbReste,
-            this.tsslGameOver,
-            this.tsslTemps});
+			this.tsslMines,
+			this.tsslReste,
+			this.tsslSep,
+			this.tsslTotal,
+			this.tspbReste,
+			this.tsslGameOver,
+			this.tsslTemps});
 		this.ssMines.Location = new System.Drawing.Point(0, 364);
 		this.ssMines.Name = "ssMines";
 		this.ssMines.Size = new System.Drawing.Size(693, 22);
@@ -144,3 +147,4 @@ partial class FDémineur
 
 }
 
+#endif

@@ -1,1 +1,4 @@
-res://main_window.tscn
+res://FDémineur.tscn
+res://Démineur/obj/Debug/net8.0-windows/Démineur.GlobalUsings.g.cs
+res://Démineur/Case.cs
+res://Démineur/FDémineur.Designer.cs
