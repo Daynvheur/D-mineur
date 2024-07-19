@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://br32jtvcb04mx"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="ssMines" type="HFlowContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="tsslMines" type="Label" parent="ssMines"]
+layout_mode = 2
+text = "Mines restantes : 
+"
+
+[node name="tsslReste" type="Label" parent="ssMines"]
+layout_mode = 2
+text = "56"
+
+[node name="tsslSep" type="Label" parent="ssMines"]
+layout_mode = 2
+text = "/
+"
+
+[node name="tsslTotal" type="Label" parent="ssMines"]
+layout_mode = 2
+text = "200
+"
+
+[node name="ProgressBar" type="ProgressBar" parent="ssMines"]
+custom_minimum_size = Vector2(117, 18)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+max_value = 200.0
+step = 1.0
+value = 144.0
+
+[node name="tsslGameOver" type="Label" parent="ssMines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
+text = "GameOver !"
+
+[node name="tsslTemps" type="Label" parent="ssMines"]
+layout_mode = 2
+text = "(Temps écoulé)"
