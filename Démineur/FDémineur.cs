@@ -61,7 +61,7 @@ public partial class FDémineur : Form
 				throw new NotImplementedException(mouse.Button.ToString());
 		}
 
-		int plateauMarquées = Plateau.LPlateau.Where(c => c.isMarked).Count();
+		int plateauMarquées = Plateau.LPlateau.Count(c => c.isMarked);
 		if (plateauMarquées == Plateau.LPlateau.Count(c => c.isMined)) Plateau.LPlateau.Where(c => c.isHidden && !c.isMarked).ToList().ForEach(c => c.Reveal());
 		tspbReste.Value = plateauMarquées;
 		tsslReste.Text = (Plateau.LPlateau.Count(c => c.isMined && c.isHidden) - plateauMarquées).ToString();
