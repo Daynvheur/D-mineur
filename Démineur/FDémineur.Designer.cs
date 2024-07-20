@@ -31,104 +31,96 @@ partial class FDémineur : System.Windows.Forms.Form
 	/// </summary>
 	private void InitializeComponent()
 	{
-		this.components = new System.ComponentModel.Container();
-		this.ssMines = new System.Windows.Forms.StatusStrip();
-		this.tsslMines = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tsslReste = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tsslSep = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tsslTotal = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tsslGameOver = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tspbReste = new System.Windows.Forms.ToolStripProgressBar();
-		this.tsslTemps = new System.Windows.Forms.ToolStripStatusLabel();
-		this.tTemps = new System.Windows.Forms.Timer(this.components);
-		this.ssMines.SuspendLayout();
-		this.SuspendLayout();
+		components = new System.ComponentModel.Container();
+		ssMines = new StatusStrip();
+		tsslMines = new ToolStripStatusLabel();
+		tsslReste = new ToolStripStatusLabel();
+		tsslSep = new ToolStripStatusLabel();
+		tsslTotal = new ToolStripStatusLabel();
+		tsslGameOver = new ToolStripStatusLabel();
+		tspbReste = new ToolStripProgressBar();
+		tsslTemps = new ToolStripStatusLabel();
+		tTemps = new System.Windows.Forms.Timer(components);
+		ssMines.SuspendLayout();
+		SuspendLayout();
 		// 
 		// ssMines
 		// 
-		this.ssMines.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.tsslMines,
-			this.tsslReste,
-			this.tsslSep,
-			this.tsslTotal,
-			this.tspbReste,
-			this.tsslGameOver,
-			this.tsslTemps});
-		this.ssMines.Location = new System.Drawing.Point(0, 364);
-		this.ssMines.Name = "ssMines";
-		this.ssMines.Size = new System.Drawing.Size(693, 22);
-		this.ssMines.TabIndex = 0;
-		this.ssMines.Text = "statusStrip1";
+		ssMines.Items.AddRange(new ToolStripItem[] { tsslMines, tsslReste, tsslSep, tsslTotal, tspbReste, tsslGameOver, tsslTemps });
+		ssMines.Location = new Point(0, 364);
+		ssMines.Name = "ssMines";
+		ssMines.Size = new Size(693, 22);
+		ssMines.TabIndex = 0;
+		ssMines.Text = "statusStrip1";
 		// 
 		// tsslMines
 		// 
-		this.tsslMines.Name = "tsslMines";
-		this.tsslMines.Size = new System.Drawing.Size(98, 17);
-		this.tsslMines.Text = "Mines restantes : ";
+		tsslMines.Name = "tsslMines";
+		tsslMines.Size = new Size(98, 17);
+		tsslMines.Text = "Mines restantes : ";
 		// 
 		// tsslReste
 		// 
-		this.tsslReste.Name = "tsslReste";
-		this.tsslReste.Size = new System.Drawing.Size(19, 17);
-		this.tsslReste.Text = "56";
-		this.tsslReste.TextChanged += new System.EventHandler(this.TsslReste_TextChanged);
+		tsslReste.Name = "tsslReste";
+		tsslReste.Size = new Size(19, 17);
+		tsslReste.Text = "56";
+		tsslReste.TextChanged += TsslReste_TextChanged;
 		// 
 		// tsslSep
 		// 
-		this.tsslSep.Name = "tsslSep";
-		this.tsslSep.Size = new System.Drawing.Size(12, 17);
-		this.tsslSep.Text = "/";
+		tsslSep.Name = "tsslSep";
+		tsslSep.Size = new Size(12, 17);
+		tsslSep.Text = "/";
 		// 
 		// tsslTotal
 		// 
-		this.tsslTotal.Name = "tsslTotal";
-		this.tsslTotal.Size = new System.Drawing.Size(25, 17);
-		this.tsslTotal.Text = "200";
+		tsslTotal.Name = "tsslTotal";
+		tsslTotal.Size = new Size(25, 17);
+		tsslTotal.Text = "200";
 		// 
 		// tsslGameOver
 		// 
-		this.tsslGameOver.BackColor = System.Drawing.SystemColors.Control;
-		this.tsslGameOver.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-		this.tsslGameOver.ForeColor = System.Drawing.Color.DarkRed;
-		this.tsslGameOver.Name = "tsslGameOver";
-		this.tsslGameOver.Size = new System.Drawing.Size(75, 17);
-		this.tsslGameOver.Text = "GameOver !";
-		this.tsslGameOver.Visible = false;
-		this.tsslGameOver.Click += new System.EventHandler(this.TsslGameOver_Click);
+		tsslGameOver.BackColor = SystemColors.Control;
+		tsslGameOver.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+		tsslGameOver.ForeColor = Color.DarkRed;
+		tsslGameOver.Name = "tsslGameOver";
+		tsslGameOver.Size = new Size(75, 17);
+		tsslGameOver.Text = "GameOver !";
+		tsslGameOver.Visible = false;
+		tsslGameOver.Click += TsslGameOver_Click;
 		// 
 		// tspbReste
 		// 
-		this.tspbReste.Maximum = 200;
-		this.tspbReste.Name = "tspbReste";
-		this.tspbReste.Size = new System.Drawing.Size(100, 16);
-		this.tspbReste.Value = 144;
+		tspbReste.Maximum = 200;
+		tspbReste.Name = "tspbReste";
+		tspbReste.Size = new Size(100, 16);
+		tspbReste.Value = 144;
 		// 
 		// tsslTemps
 		// 
-		this.tsslTemps.Name = "tsslTemps";
-		this.tsslTemps.Size = new System.Drawing.Size(95, 17);
-		this.tsslTemps.Text = "(Temps écoulé !)";
+		tsslTemps.Name = "tsslTemps";
+		tsslTemps.Size = new Size(95, 17);
+		tsslTemps.Text = "(Temps écoulé !)";
 		// 
 		// tTemps
 		// 
-		this.tTemps.Enabled = true;
-		this.tTemps.Interval = 1000;
-		this.tTemps.Tick += new System.EventHandler(this.TTemps_Tick);
+		tTemps.Enabled = true;
+		tTemps.Interval = 1000;
+		tTemps.Tick += TTemps_Tick;
 		// 
 		// fDémineur
 		// 
-		this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-		this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-		this.ClientSize = new System.Drawing.Size(693, 386);
-		this.Controls.Add(this.ssMines);
-		this.Name = "fDémineur";
-		this.Text = "Démineur";
-		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FDémineur_KeyPress);
-		this.ssMines.ResumeLayout(false);
-		this.ssMines.PerformLayout();
-		this.ResumeLayout(false);
-		this.PerformLayout();
-
+		AutoScaleDimensions = new SizeF(6F, 13F);
+		AutoScaleMode = AutoScaleMode.Font;
+		ClientSize = new Size(693, 386);
+		Controls.Add(ssMines);
+		Name = "fDémineur";
+		Text = "Démineur";
+		KeyPress += FDémineur_KeyPress;
+		ssMines.ResumeLayout(false);
+		ssMines.PerformLayout();
+		ResumeLayout(false);
+		PerformLayout();
 	}
 
 	#endregion
@@ -146,5 +138,4 @@ partial class FDémineur : System.Windows.Forms.Form
 
 
 }
-
 #endif

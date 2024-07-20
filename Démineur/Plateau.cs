@@ -1,4 +1,5 @@
-﻿namespace Démineur;
+#nullable enable
+namespace Démineur;
 
 public static class Plateau
 {

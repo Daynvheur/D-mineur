@@ -1,5 +1,5 @@
-#if !GODOT
-
+#nullable enable
+#if GODOT
 #else
 using System.Drawing.Drawing2D;
 #endif
@@ -23,6 +23,9 @@ public class PixelBox
 }
 
 public class Case
+#if GODOT
+ : TextureButton
+#endif
 {
 	private static int population = 0; //Déclaration d'existence dans la population
 
@@ -37,7 +40,7 @@ public class Case
 	public List<Case> Voisines { get; set; } = [];
 	public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
 
-	private const string imgDir = @"Images\";
+	private const string imgDir = "Images\\";
 	private static readonly Image imgHidden = Image.FromFile(imgDir + "_.png");
 
 	//Affichage dans une PictureBox
