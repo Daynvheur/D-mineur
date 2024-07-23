@@ -6,3 +6,4 @@ res://Démineur/obj/Release/net8.0-windows/Démineur.AssemblyInfo.cs
 res://Démineur/obj/Debug/net8.0-windows/Démineur.GlobalUsings.g.cs
 res://Démineur/FDémineur.cs
 res://Démineur/Plateau.cs
+res://Case.cs
