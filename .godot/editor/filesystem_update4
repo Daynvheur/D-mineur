@@ -1,9 +1,1 @@
 res://FDémineur.tscn
-res://Démineur/Case.cs
-res://MinesGridLayer.cs
-res://Démineur/obj/Release/net8.0-windows/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
-res://Démineur/obj/Release/net8.0-windows/Démineur.AssemblyInfo.cs
-res://Démineur/obj/Debug/net8.0-windows/Démineur.GlobalUsings.g.cs
-res://Démineur/FDémineur.cs
-res://Démineur/Plateau.cs
-res://Case.cs
