@@ -50,7 +50,7 @@ public partial class FD_mineur : Control
 		return string.Format("{0:00}:{1:00}", minutes, secondes);
 	}
 	
-	private static (int entier, double reste) GetDivMod(double time, int baseValue, bool forceSign = false)
+	private static (int entier, double reste) GetDivMod(double time, double baseValue, bool forceSign = false)
 	{
 		double reste = time;
 		int entier = 0;
