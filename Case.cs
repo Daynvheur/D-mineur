@@ -80,15 +80,13 @@ public class Case
 		Plateau.SetTexture?.Invoke(this);
 	}
 
-	public void Restore() => Restore(save);
-
-	private void Restore(Case? @case)
+	public void Restore()
 	{
-		if (@case is null) return;
-		isHidden = @case.isHidden;
-		isMined = @case.isMined;
-		isMarked = @case.isMarked;
-		Image = @case.Image;
+		if (save is null) return;
+		isHidden = save.isHidden;
+		isMined = save.isMined;
+		isMarked = save.isMarked;
+		Image = save.Image;
 		Plateau.SetTexture?.Invoke(this);
 	}
 

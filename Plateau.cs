@@ -26,7 +26,7 @@ public static class Plateau
 	public static int MinesMin { get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(int largeur = 3, int hauteur = 3, int mines = 1, int seed = 1337) //50, 50, 250
+	public static void InitialisePlateau(int largeur = 25, int hauteur = 25, int mines = 63, int seed = 1337) //50, 50, 250
 	{
 		int mining = 0;
 		Random rand = new(/*seed*/);
@@ -57,6 +57,22 @@ public static class Plateau
 		Y = hauteur;
 		MinesMax = mines;
 	}
+
+	public static void RestaurePlateau()
+	{
+		Console.Write($"Je suis la fonction {nameof(RestaurePlateau)}.");
+		int mining = 0;
+		Random rand = new(/*seed*/);
+		int iMax = X * Y;
+
+		for (int i = 0; i < iMax; i++)
+		{
+			Console.Write($"{LPlateau[i] is null}.");
+			LPlateau[i].Restore();
+			LPlateau[i].isMined = (rand.Next(iMax - i) < MinesMax - mining) && mining == mining++;
+			LPlateau[i].Save();
+		}
+    }
 
 	public static void InteractionDispatcher(InputEvent @event, Case @case)
 	{

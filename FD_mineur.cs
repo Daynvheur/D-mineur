@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System;
 using System.Linq;
 
 public enum ETexture
@@ -253,7 +254,7 @@ public partial class FD_mineur : Control
 		if (TsslGameOver is not null)
 		{
 			TsslGameOver.SetVisible(isGameOver);
-			TsslGameOver.GuiInput += (_) => Plateau.InitialisePlateau();
+			TsslGameOver.GuiInput += _ => Plateau.RestaurePlateau();
 		}
 		TsslTemps?.SetText(FormatTime(elapsedTime));
 		Plateau.InitialisePlateau();
