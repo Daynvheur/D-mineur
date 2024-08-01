@@ -210,6 +210,11 @@ public partial class FD_mineur : Control
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "<En attente>")]
 	public FD_mineur() : base()
 	{
+		Plateau.SetGameOver = (gameOver) =>
+		{
+			isGameOver = gameOver;
+			TsslGameOver?.SetVisible(gameOver);
+		};
 		Plateau.UpdateMines = (int min, int marques, int max) =>
 		{
 			TsslReste?.SetText((max - marques - min).ToString());
@@ -245,7 +250,11 @@ public partial class FD_mineur : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		TsslGameOver?.SetVisible(isGameOver);
+		if (TsslGameOver is not null)
+		{
+			TsslGameOver.SetVisible(isGameOver);
+			TsslGameOver.GuiInput += (_) => Plateau.InitialisePlateau();
+		}
 		TsslTemps?.SetText(FormatTime(elapsedTime));
 		Plateau.InitialisePlateau();
 
@@ -259,12 +268,6 @@ public partial class FD_mineur : Control
 		elapsedTime += delta;
 
 		TsslTemps?.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
-	}
-
-	public void SetGameOver(bool gameOver = true)
-	{
-		isGameOver = gameOver;
-		TsslGameOver?.SetVisible(gameOver);
 	}
 
 	private static void SetTextures(TextureButton? bouton, Dictionary<Textures, Resource?> images)

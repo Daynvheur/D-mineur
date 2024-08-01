@@ -18,14 +18,15 @@ public static class Plateau
 	public static int Y { get => y; private set => y = value; }
 	public static Func<int, int, TextureButton>? AddCase { get; set; }
 	public static Func<Case, Control.GuiInputEventHandler>? CaseClick { get; set; }
-	public static Action<Case>? SetTexture { get; internal set; }
+	public static Action<Case>? SetTexture { get; set; }
+	public static Action<bool>? SetGameOver { get; set; }
 	public static Action<int, int, int>? UpdateMines { get; set; }
 	public static int MinesMax { get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 	public static int MinesMarquees { get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 	public static int MinesMin { get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(int largeur = 25, int hauteur = 25, int mines = 63, int seed = 1337) //50, 50, 250
+	public static void InitialisePlateau(int largeur = 3, int hauteur = 3, int mines = 1, int seed = 1337) //50, 50, 250
 	{
 		int mining = 0;
 		Random rand = new(/*seed*/);
@@ -96,6 +97,7 @@ public static class Plateau
 			if (@case.isMined) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la mine incorrectement dévoilées
 			{
 				LPlateau.Where(c => c.isHidden && c.isMined).ToList().ForEach(c => c.Reveal());
+				SetGameOver?.Invoke(true);
 			}
 		}
 		else
@@ -141,7 +143,11 @@ public static class Plateau
 		}
 		List<Case> plateauVoilées = LPlateau.Where(c => c.isHidden).ToList();
 		//Si toutes les cases restantes sont minées, les marquer
-		if (plateauVoilées.Count == LPlateau.Count(c => c.isMined)) plateauVoilées.ForEach(c => c.Marque());
+		if (plateauVoilées.Count == LPlateau.Count(c => c.isMined))
+		{
+			plateauVoilées.ForEach(c => c.Marque());
+			SetGameOver?.Invoke(true);
+		}
 	}
 
 	public static void Interaction2(Case @case)
