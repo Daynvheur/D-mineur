@@ -1,5 +1,34 @@
 using Godot;
-using System;
+using Godot.Collections;
+using System.Linq;
+
+public enum ETexture
+{
+	Minee = -5,
+	Question = -4,
+	Marquee = -3,
+	Fermee = -2,
+	None = -1,
+	Zero,
+	Un,
+	Deux,
+	Trois,
+	Quatre,
+	Cinq,
+	Six,
+	Sept,
+	Huit,
+}
+
+public enum Textures
+{
+	Normal,
+	Pressed,
+	Hover,
+	Disabled,
+	Focused,
+	ClickMask,
+}
 
 public partial class FD_mineur : Control
 {
@@ -8,22 +37,177 @@ public partial class FD_mineur : Control
 
 	[Export]
 	public HBoxContainer? HBoxContainer { get; set; }
+
 	[Export]
 	public Label? TsslReste { get; set; }
+
 	[Export]
 	public Label? TsslTotal { get; set; }
+
 	[Export]
 	public ProgressBar? ProgressBar { get; set; }
+
 	[Export]
 	public Label? TsslGameOver { get; set; }
+
 	[Export]
 	public Label? TsslTemps { get; set; }
+
 	[Export]
 	public Timer? Timer { get; set; }
 
 	[Export]
 	public double elapsedTime = 0;
 
+	[Export]
+	public Dictionary<ETexture, Dictionary<Textures, Resource?>> ImagesArray { get; set; } = new()
+	{
+		{ ETexture.Minee, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Question, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Marquee, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Fermee, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.None, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Zero, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Un, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Deux, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Trois, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Quatre, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Cinq, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Six, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Sept, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+		{ ETexture.Huit, new()
+			{
+				{ Textures.Normal, null },
+				{ Textures.Pressed, null },
+				{ Textures.Hover, null },
+				{ Textures.Disabled, null },
+				{ Textures.Focused, null },
+				{ Textures.ClickMask, null },
+			}
+		},
+	};
+
+	[Export]
+	public ETexture TestEtexture;
+
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "<En attente>")]
 	public FD_mineur() : base()
 	{
 		Plateau.UpdateMines = (int min, int marques, int max) =>
@@ -36,10 +220,26 @@ public partial class FD_mineur : Control
 		};
 		Plateau.AddCase = (int x, int y) =>
 		{
-			var bouton = new Button() { Position = new(x, y), Size = new(Case.Size_x, Case.Size_y) };
+			var bouton = new TextureButton
+			{
+				Position = new(x, y),
+				Size = new(Case.Size_x, Case.Size_y),
+				StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered,
+			};
+			SetTextures(bouton, ImagesArray[ETexture.Fermee]);
 			AddChild(bouton);
 			return bouton;
 		};
+		Plateau.SetTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.isHidden
+			? @case.isMarked
+				? ETexture.Marquee
+				// : @case.isQuestion
+				// ? ETexture.Question
+				: ETexture.Fermee
+			: @case.isMined
+				? ETexture.Minee
+				: (ETexture)@case.HasMineVoisines]);
+		Plateau.CaseClick = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
 	}
 
 	// Called when the node enters the scene tree for the first time.
@@ -47,8 +247,6 @@ public partial class FD_mineur : Control
 	{
 		TsslGameOver?.SetVisible(isGameOver);
 		TsslTemps?.SetText(FormatTime(elapsedTime));
-
-		Plateau.CaseClick = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case); //Plateau.InteractionDispatcher(@event, @case);
 		Plateau.InitialisePlateau();
 
 		GetWindow().Size = new(Plateau.X * Case.Size_x, (Plateau.Y * Case.Size_y) + (int)(HBoxContainer?.Size.Y ?? 0));
@@ -67,6 +265,35 @@ public partial class FD_mineur : Control
 	{
 		isGameOver = gameOver;
 		TsslGameOver?.SetVisible(gameOver);
+	}
+
+	private static void SetTextures(TextureButton? bouton, Dictionary<Textures, Resource?> images)
+	{
+		if (bouton is null) return;
+		foreach (var texture in images)
+			switch (texture.Key)
+			{
+				case Textures.Normal:
+					bouton.TextureNormal = (Texture2D?)texture.Value;
+					break;
+				case Textures.Pressed:
+					bouton.TexturePressed = (Texture2D?)texture.Value;
+					break;
+				case Textures.Hover:
+					bouton.TextureHover = (Texture2D?)texture.Value;
+					break;
+				case Textures.Disabled:
+					bouton.TextureDisabled = (Texture2D?)texture.Value;
+					break;
+				case Textures.Focused:
+					bouton.TextureFocused = (Texture2D?)texture.Value;
+					break;
+				case Textures.ClickMask:
+					bouton.TextureClickMask = (Bitmap?)texture.Value;
+					break;
+				default:
+					break;
+			}
 	}
 
 	private static string FormatTime(double time)

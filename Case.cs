@@ -30,7 +30,7 @@ public class Case
 	public List<Case> Voisines { get; set; } = [];
 
 	//public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
-	public Control? Image { get; set; }
+	public TextureButton? Image { get; set; }
 
 	private const string imgDir = @"Images\";
 
@@ -63,18 +63,21 @@ public class Case
 	{
 		//Image = !isMined ? Image.FromFile(imgDir + HasMineVoisines + ".png") : Image.FromFile(imgDir + "m.png");
 		isHidden = false;
+		Plateau.SetTexture?.Invoke(this);
 	}
 
 	public void Marque()
 	{
 		//Image = Image.FromFile(imgDir + "d.png");
 		isMarked = true;
+		Plateau.SetTexture?.Invoke(this);
 	}
 
 	public void Demarque()
 	{
 		//Image = imgHidden;
 		isMarked = false;
+		Plateau.SetTexture?.Invoke(this);
 	}
 
 	public void Restore() => Restore(save);
@@ -86,6 +89,7 @@ public class Case
 		isMined = @case.isMined;
 		isMarked = @case.isMarked;
 		Image = @case.Image;
+		Plateau.SetTexture?.Invoke(this);
 	}
 
 	public void Save()
@@ -102,7 +106,7 @@ public class Case
 	public void Refresh()
 	{
 		if (isHidden) return;
-		//Image = !isMined ? Image.FromFile(imgDir + HasMineVoisines + ".png") : Image.FromFile(imgDir + "m.png");
+		Plateau.SetTexture?.Invoke(this);
 	}
 
 	internal void Démine()

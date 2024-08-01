@@ -4,7 +4,7 @@ importer="texture_atlas"
 type="Texture2D"
 uid="uid://chf423s7lraer"
 path="res://.godot/imported/7.png-fa907b36f1b9d94abeffb3876945b585.res"
-group_file="res://Démineur/Images/atlas.png"
+group_file="res://Images/atlas.png"
 valid=true
 [deps]
 
@@ -14,7 +14,7 @@ dest_files=["res://.godot/imported/7.png-fa907b36f1b9d94abeffb3876945b585.res"]
 
 [params]
 
-atlas_file="res://Démineur/Images/atlas.png"
+atlas_file="res://Images/atlas.png"
 import_mode=0
 crop_to_region=false
 trim_alpha_border_from_region=true

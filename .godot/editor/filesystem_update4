@@ -1,5 +1,5 @@
 res://FDémineur.tscn
-res://FD_mineur.cs
-res://MinesGridLayer.cs
 res://Button_Test.cs
-res://Plateau.cs
+res://MinesGridLayer.cs
+res://FD_mineur.cs
+res://tile_map_layer.tscn

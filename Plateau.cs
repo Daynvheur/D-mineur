@@ -16,8 +16,9 @@ public static class Plateau
 	public static Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
 	public static int X { get => x; private set => x = value; }
 	public static int Y { get => y; private set => y = value; }
-	public static Func<int, int, Control>? AddCase { get; set; }
+	public static Func<int, int, TextureButton>? AddCase { get; set; }
 	public static Func<Case, Control.GuiInputEventHandler>? CaseClick { get; set; }
+	public static Action<Case>? SetTexture { get; internal set; }
 	public static Action<int, int, int>? UpdateMines { get; set; }
 	public static int MinesMax { get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 	public static int MinesMarquees { get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
@@ -71,9 +72,10 @@ public static class Plateau
 				//case InputEventShortcut:
 				//case InputEventAction:
 				//break;
-			case InputEventMouseButton mouseEvent when mouseEvent.ButtonIndex == MouseButton.Right:
+			case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
 				Console.WriteLine($"{{{nameof(mouseEvent.ButtonIndex)}:{mouseEvent.ButtonIndex},{nameof(mouseEvent.ButtonMask)}:{mouseEvent.ButtonMask},{nameof(mouseEvent.Pressed)}:{mouseEvent.Pressed}}}");
 				Console.Write($"Je suis la case {@case.populationId} ! ");
+				Interaction1(@case);
 				break;
 			//case InputEventKey keyEvent:
 			//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");

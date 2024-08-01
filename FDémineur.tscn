@@ -1,9 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://br32jtvcb04mx"]
+[gd_scene load_steps=13 format=3 uid="uid://br32jtvcb04mx"]
 
 [ext_resource type="Script" path="res://FD_mineur.cs" id="1_0ccyq"]
-[ext_resource type="Script" path="res://Button_Test.cs" id="2_4kn3j"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y7il3"]
+[ext_resource type="Texture2D" uid="uid://cdqbhrq2tglnq" path="res://Images/_.png" id="4_n2ou2"]
+[ext_resource type="Texture2D" uid="uid://wakoirbfgiul" path="res://Images/m.png" id="5_dgtwe"]
+[ext_resource type="Texture2D" uid="uid://cilgrlsoksgdn" path="res://Images/0.png" id="7_b7pcu"]
+[ext_resource type="Texture2D" uid="uid://1citckjppaoq" path="res://Images/1.png" id="8_1tclq"]
+[ext_resource type="Texture2D" uid="uid://br7nv0hh4hrbw" path="res://Images/2.png" id="9_d6uks"]
+[ext_resource type="Texture2D" uid="uid://biayqdlq8kqfo" path="res://Images/3.png" id="10_6w7kf"]
+[ext_resource type="Texture2D" uid="uid://osle5r8aso8l" path="res://Images/4.png" id="11_uu66d"]
+[ext_resource type="Texture2D" uid="uid://dtgf0g0d3t144" path="res://Images/5.png" id="13_lcq1b"]
+[ext_resource type="Texture2D" uid="uid://pdupl21vwqco" path="res://Images/6.png" id="14_bt53i"]
+[ext_resource type="Texture2D" uid="uid://chf423s7lraer" path="res://Images/7.png" id="15_ibfkb"]
+[ext_resource type="Texture2D" uid="uid://bpahpjr3wpxw0" path="res://Images/8.png" id="16_01if4"]
 
 [node name="FD_mineur" type="Control" node_paths=PackedStringArray("HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
 layout_mode = 3
@@ -14,15 +22,128 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0ccyq")
 HBoxContainer = NodePath("HBoxContainer")
-TsslReste = NodePath("HBoxContainer/tsslReste")
-TsslTotal = NodePath("HBoxContainer/tsslTotal")
+TsslReste = NodePath("HBoxContainer/TsslReste")
+TsslTotal = NodePath("HBoxContainer/TsslTotal")
 ProgressBar = NodePath("HBoxContainer/ProgressBar")
-TsslGameOver = NodePath("HBoxContainer/tsslGameOver")
-TsslTemps = NodePath("HBoxContainer/tsslTemps")
-Timer = NodePath("timer")
-elapsedTime = 315543.0
+TsslGameOver = NodePath("HBoxContainer/TsslGameOver")
+TsslTemps = NodePath("HBoxContainer/TsslTemps")
+Timer = NodePath("Timer")
+ImagesArray = {
+-5: {
+0: ExtResource("5_dgtwe"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+-4: {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+-3: {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+-2: {
+0: ExtResource("4_n2ou2"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+-1: {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+0: {
+0: ExtResource("7_b7pcu"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+1: {
+0: ExtResource("8_1tclq"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+2: {
+0: ExtResource("9_d6uks"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+3: {
+0: ExtResource("10_6w7kf"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+4: {
+0: ExtResource("11_uu66d"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+5: {
+0: ExtResource("13_lcq1b"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+6: {
+0: ExtResource("14_bt53i"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+7: {
+0: ExtResource("15_ibfkb"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+8: {
+0: ExtResource("16_01if4"),
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+}
+}
 
-[node name="timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="."]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_direction = 2
@@ -36,24 +157,24 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
 
-[node name="tsslMines" type="Label" parent="HBoxContainer"]
+[node name="TsslMines" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "Mines restantes : 
 "
 max_lines_visible = 1
 
-[node name="tsslReste" type="Label" parent="HBoxContainer"]
+[node name="TsslReste" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "56"
 max_lines_visible = 1
 
-[node name="tsslSep" type="Label" parent="HBoxContainer"]
+[node name="TsslSep" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "/
 "
 max_lines_visible = 1
 
-[node name="tsslTotal" type="Label" parent="HBoxContainer"]
+[node name="TsslTotal" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "200
 "
@@ -69,28 +190,28 @@ step = 1.0
 value = 144.0
 allow_greater = true
 
-[node name="tsslGameOver" type="Label" parent="HBoxContainer"]
+[node name="TsslGameOver" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
 text = "GameOver !"
 max_lines_visible = 1
 
-[node name="tsslTemps" type="Label" parent="HBoxContainer"]
+[node name="TsslTemps" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "(Temps écoulé)"
 max_lines_visible = 1
 
-[node name="Button_Test" type="Button" parent="."]
-texture_filter = 1
-material = SubResource("CanvasItemMaterial_y7il3")
+[node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 1182.0
-offset_top = 110.0
-offset_right = 1500.0
-offset_bottom = 304.0
-icon_alignment = 1
-expand_icon = true
-script = ExtResource("2_4kn3j")
+offset_left = -515.0
+offset_top = 232.0
+offset_right = -204.0
+offset_bottom = 361.0
 
-[connection signal="gui_input" from="Button_Test" to="Button_Test" method="OnButtonInput"]
-[connection signal="pressed" from="Button_Test" to="Button_Test" method="OnButtonPressed"]
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = -484.0
+offset_top = 74.0
+offset_right = -229.0
+offset_bottom = 181.0
+stretch_mode = 5
