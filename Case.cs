@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ using System.Linq;
 
 public class Case
 {
-	private static int population = 0; //Déclaration d'existence dans la population
-
+	public static int population = 0; //Déclaration d'existence dans la population
+	public int populationId;
 	public static int Size_x { get; set; } = 12 * 2;
 	public static int Size_y { get; set; } = 12 * 2;
 
@@ -29,8 +30,10 @@ public class Case
 	public List<Case> Voisines { get; set; } = [];
 
 	//public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
+	public Control? Image { get; set; }
 
 	private const string imgDir = @"Images\";
+
 	//private static readonly Image imgHidden = Image.FromFile(imgDir + "_.png");
 
 	////Affichage dans une PictureBox
@@ -41,18 +44,19 @@ public class Case
 	//    Image = imgHidden, //apparence
 	//    SizeMode = PictureBoxSizeMode.Zoom
 	//};
-
 	private Case? save;
 
-	public Case(bool _isMined = false, bool _isHidden = true, bool _isMarked = false/*int i_x, int i_y, Action<object?, EventArgs> pbCase_Click*/)
+	private Case()
+	{ }
+	public Case(int i_x, int i_y, bool _isMined = false, bool _isHidden = true, bool _isMarked = false)
 	{
-		population++;
+		populationId = population++;
 		isHidden = _isHidden;
 		isMarked = _isMarked;
 		isMined = _isMined;
-		//Image = imgHidden;
-		//pictBox.Location = new Point(i_x * Size_x, i_y * Size_y); //positionnement du point haut-gauche
-		//pictBox.Click += new EventHandler(pbCase_Click);
+		Image = Plateau.AddCase?.Invoke(i_x * Size_x, i_y * Size_y);
+		if (Image is not null && Plateau.CaseClick is not null)
+			Image.GuiInput += Plateau.CaseClick(this);
 	}
 
 	public void Reveal()
@@ -81,12 +85,18 @@ public class Case
 		isHidden = @case.isHidden;
 		isMined = @case.isMined;
 		isMarked = @case.isMarked;
-		//Image = @case.Image;
+		Image = @case.Image;
 	}
 
 	public void Save()
 	{
-		save = new(isMined, isHidden, isMarked);
+		save = new()
+		{
+			isHidden = isHidden,
+			isMined = isMined,
+			isMarked = isMarked,
+			Image = Image
+		};
 	}
 
 	public void Refresh()

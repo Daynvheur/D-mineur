@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://br32jtvcb04mx"]
+[gd_scene load_steps=4 format=3 uid="uid://br32jtvcb04mx"]
 
 [ext_resource type="Script" path="res://FD_mineur.cs" id="1_0ccyq"]
+[ext_resource type="Script" path="res://Button_Test.cs" id="2_4kn3j"]
 
-[node name="FD_mineur" type="Control"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y7il3"]
+
+[node name="FD_mineur" type="Control" node_paths=PackedStringArray("HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,51 +13,53 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0ccyq")
+HBoxContainer = NodePath("HBoxContainer")
+TsslReste = NodePath("HBoxContainer/tsslReste")
+TsslTotal = NodePath("HBoxContainer/tsslTotal")
+ProgressBar = NodePath("HBoxContainer/ProgressBar")
+TsslGameOver = NodePath("HBoxContainer/tsslGameOver")
+TsslTemps = NodePath("HBoxContainer/tsslTemps")
+Timer = NodePath("timer")
 elapsedTime = 315543.0
 
 [node name="timer" type="Timer" parent="."]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_direction = 2
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -27.0
 grow_horizontal = 2
-grow_vertical = 2
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_direction = 2
-layout_mode = 2
+grow_vertical = 0
 size_flags_vertical = 8
 
-[node name="tsslMines" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslMines" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "Mines restantes : 
 "
 max_lines_visible = 1
 
-[node name="tsslReste" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslReste" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "56"
 max_lines_visible = 1
 
-[node name="tsslSep" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslSep" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "/
 "
 max_lines_visible = 1
 
-[node name="tsslTotal" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslTotal" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "200
 "
 max_lines_visible = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/HBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
 custom_minimum_size = Vector2(117, 18)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -64,13 +69,28 @@ step = 1.0
 value = 144.0
 allow_greater = true
 
-[node name="tsslGameOver" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslGameOver" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
 text = "GameOver !"
 max_lines_visible = 1
 
-[node name="tsslTemps" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="tsslTemps" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "(Temps écoulé)"
 max_lines_visible = 1
+
+[node name="Button_Test" type="Button" parent="."]
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_y7il3")
+layout_mode = 0
+offset_left = 1182.0
+offset_top = 110.0
+offset_right = 1500.0
+offset_bottom = 304.0
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("2_4kn3j")
+
+[connection signal="gui_input" from="Button_Test" to="Button_Test" method="OnButtonInput"]
+[connection signal="pressed" from="Button_Test" to="Button_Test" method="OnButtonPressed"]

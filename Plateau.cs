@@ -1,4 +1,5 @@
-﻿using System;
+using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,13 +16,15 @@ public static class Plateau
 	public static Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
 	public static int X { get => x; private set => x = value; }
 	public static int Y { get => y; private set => y = value; }
+	public static Func<int, int, Control>? AddCase { get; set; }
+	public static Func<Case, Control.GuiInputEventHandler>? CaseClick { get; set; }
 	public static Action<int, int, int>? UpdateMines { get; set; }
 	public static int MinesMax { get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 	public static int MinesMarquees { get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 	public static int MinesMin { get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(/*Action<object?, EventArgs> pbCase_Click,*/ int largeur = 25, int hauteur = 25, int mines = 63, int seed = 1337) //50, 50, 250
+	public static void InitialisePlateau(int largeur = 25, int hauteur = 25, int mines = 63, int seed = 1337) //50, 50, 250
 	{
 		int mining = 0;
 		Random rand = new(/*seed*/);
@@ -32,8 +35,8 @@ public static class Plateau
 		for (int i = 0; i < iMax; i++)
 		{
 			int i_x = i % largeur;
-			//int i_y = i / largeur;
-			LPlateau[i] = new((rand.Next(iMax - i) < mines - mining) && mining == mining++ /*, i_x, i_y, pbCase_Click*/); //Référencement de la case
+			int i_y = i / largeur;
+			LPlateau[i] = new(i_x, i_y, (rand.Next(iMax - i) < mines - mining) && mining == mining++); //Référencement de la case
 
 			if (i >= largeur) //étage 1+
 			{
@@ -51,6 +54,36 @@ public static class Plateau
 		X = largeur;
 		Y = hauteur;
 		MinesMax = mines;
+	}
+
+	public static void InteractionDispatcher(InputEvent @event, Case @case)
+	{
+		switch (@event)
+		{
+			//case InputEventMouseMotion:
+				//case InputEventMagnifyGesture:
+				//case InputEventPanGesture:
+				//case InputEventScreenDrag:
+				//case InputEventScreenTouch:
+				//case InputEventJoypadButton:
+				//case InputEventJoypadMotion:
+				//case InputEventMidi:
+				//case InputEventShortcut:
+				//case InputEventAction:
+				//break;
+			case InputEventMouseButton mouseEvent when mouseEvent.ButtonIndex == MouseButton.Right:
+				Console.WriteLine($"{{{nameof(mouseEvent.ButtonIndex)}:{mouseEvent.ButtonIndex},{nameof(mouseEvent.ButtonMask)}:{mouseEvent.ButtonMask},{nameof(mouseEvent.Pressed)}:{mouseEvent.Pressed}}}");
+				Console.Write($"Je suis la case {@case.populationId} ! ");
+				break;
+			//case InputEventKey keyEvent:
+			//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
+			//	Console.Write($"Je suis la case {@case.populationId} ! ");
+			//	break;
+
+				//default:
+				//	Console.WriteLine($"Je suis un événement {@event.GetType()}.");
+				//	break;
+		}
 	}
 
 	public static void Interaction1(Case @case)

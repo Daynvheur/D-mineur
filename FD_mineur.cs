@@ -3,76 +3,70 @@ using System;
 
 public partial class FD_mineur : Control
 {
-	private class Re
-	{
-		protected Re()
-		{ }
-
-		public static Func<NodePath, Node> MaybeGetNode { protected get; set; } = _ => throw new NotImplementedException(nameof(MaybeGetNode));
-	}
-
-	private sealed class ReNode<TNode> : Re where TNode : Node
-	{
-		public ReNode(string path) : base()
-		{ _path = path; }
-
-		private readonly string _path;
-		private TNode? _me;
-		public TNode Me => _me ??= (TNode)MaybeGetNode(_path);
-	}
-
 	[Export]
 	public bool isGameOver = false;
 
 	[Export]
+	public HBoxContainer? HBoxContainer { get; set; }
+	[Export]
+	public Label? TsslReste { get; set; }
+	[Export]
+	public Label? TsslTotal { get; set; }
+	[Export]
+	public ProgressBar? ProgressBar { get; set; }
+	[Export]
+	public Label? TsslGameOver { get; set; }
+	[Export]
+	public Label? TsslTemps { get; set; }
+	[Export]
+	public Timer? Timer { get; set; }
+
+	[Export]
 	public double elapsedTime = 0;
-
-	private readonly ReNode<Timer> timer = new("timer");
-	private readonly ReNode<Label> tsslGameOver = new("VBoxContainer/HBoxContainer/tsslGameOver");
-	private readonly ReNode<Label> tsslTemps = new("VBoxContainer/HBoxContainer/tsslTemps");
-
-	//private Label? _tsslReste; private Label? oldtsslReste => _tsslReste ??= (Label)GetNodeOrNull("VBoxContainer/HBoxContainer/tsslReste")
-	private readonly ReNode<Label> tsslReste = new("/root/FD_mineur/VBoxContainer/HBoxContainer/tsslReste");
-
-	private readonly ReNode<Label> tsslTotal = new("/root/FD_mineur/VBoxContainer/HBoxContainer/tsslTotal");
-	private readonly ReNode<ProgressBar> ProgressBar = new("/root/FD_mineur/VBoxContainer/HBoxContainer/ProgressBar");
 
 	public FD_mineur() : base()
 	{
-		Re.MaybeGetNode = GetNode;
+		Plateau.UpdateMines = (int min, int marques, int max) =>
+		{
+			TsslReste?.SetText((max - marques - min).ToString());
+			TsslTotal?.SetText(max.ToString());
+			ProgressBar?.SetMin(min);
+			ProgressBar?.SetValue(marques);
+			ProgressBar?.SetMax(max);
+		};
+		Plateau.AddCase = (int x, int y) =>
+		{
+			var bouton = new Button() { Position = new(x, y), Size = new(Case.Size_x, Case.Size_y) };
+			AddChild(bouton);
+			return bouton;
+		};
 	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		tsslGameOver.Me.SetVisible(isGameOver);
-		tsslTemps.Me.SetText(FormatTime(elapsedTime));
+		TsslGameOver?.SetVisible(isGameOver);
+		TsslTemps?.SetText(FormatTime(elapsedTime));
 
-		Plateau.UpdateMines = (int min, int marques, int max) =>
-		{
-			tsslReste.Me.SetText((max - marques - min).ToString());
-			tsslTotal.Me.SetText(max.ToString());
-			ProgressBar.Me.SetMin(min);
-			ProgressBar.Me.SetValue(marques);
-			ProgressBar.Me.SetMax(max);
-		};
+		Plateau.CaseClick = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case); //Plateau.InteractionDispatcher(@event, @case);
 		Plateau.InitialisePlateau();
-		timer.Me.Start();
+
+		GetWindow().Size = new(Plateau.X * Case.Size_x, (Plateau.Y * Case.Size_y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		Timer?.Start();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		// Mettre à jour le temps écoulé
 		elapsedTime += delta;
 
-		tsslTemps.Me.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
+		TsslTemps?.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
 	}
 
 	public void SetGameOver(bool gameOver = true)
 	{
 		isGameOver = gameOver;
-		tsslGameOver.Me.SetVisible(gameOver);
+		TsslGameOver?.SetVisible(gameOver);
 	}
 
 	private static string FormatTime(double time)

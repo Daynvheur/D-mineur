@@ -1,5 +1,6 @@
-HBoxContainer
+Button
 PanelContainer
+HBoxContainer
 TileMapLayer
 TextureButton
 Camera2D
@@ -11,4 +12,3 @@ TextureProgressBar
 ProgressBar
 HFlowContainer
 Timer
-Window
