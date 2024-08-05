@@ -255,9 +255,9 @@ public partial class FD_mineur : Control
 		Plateau.SetTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.isHidden
 			? @case.isMarked
 				? ETexture.Marquee
-				// : @case.isQuestion
-				// ? ETexture.Question
-				: ETexture.Fermee
+				: @case.isQuestioned
+					? ETexture.Question
+					: ETexture.Fermee
 			: @case.isMined
 				? ETexture.Minee
 				: (ETexture)@case.HasMineVoisines]);

@@ -24,10 +24,13 @@ public static class Plateau
 	public static Action<Case>? SetTexture { get; set; }
 	public static Action<bool>? SetGameOver { get; set; }
 	public static Action<int, int, int>? UpdateMines { get; set; }
+
 	public static int MinesMax
 	{ get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
+
 	public static int MinesMarquees
 	{ get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
+
 	public static int MinesMin
 	{ get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
@@ -86,23 +89,23 @@ public static class Plateau
 		switch (@event)
 		{
 			//case InputEventMouseMotion:
-				//case InputEventMagnifyGesture:
-				//case InputEventPanGesture:
-				//case InputEventScreenDrag:
-				//case InputEventScreenTouch:
-				//case InputEventJoypadButton:
-				//case InputEventJoypadMotion:
-				//case InputEventMidi:
-				//case InputEventShortcut:
-				//case InputEventAction:
+			//case InputEventMagnifyGesture:
+			//case InputEventPanGesture:
+			//case InputEventScreenDrag:
+			//case InputEventScreenTouch:
+			//case InputEventJoypadButton:
+			//case InputEventJoypadMotion:
+			//case InputEventMidi:
+			//case InputEventShortcut:
+			//case InputEventAction:
 			case InputEventMouseMotion mouseMove:
 				if ((@case.Image?.IsHovered()) == true)
 				{
-					Console.WriteLine("I'm in.");
+					Console.WriteLine($"I'm in {@case.populationId}.");
 				}
 				else
 				{
-					Console.WriteLine("I'm out.");
+					Console.WriteLine($"I'm out {@case.populationId}.");
 				}
 				break;
 
@@ -110,7 +113,10 @@ public static class Plateau
 				Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
 				if (mouseInput.ButtonIndex == MouseButton.Right)
 				{
-					Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
+					if (mouseInput.Pressed)
+						Interaction2(@case);
+					else
+						Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
 				}
 				else if (mouseInput.ButtonIndex != MouseButton.Left)
 				{
@@ -127,7 +133,7 @@ public static class Plateau
 						else
 						{
 							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-				Interaction1(@case);
+							Interaction1(@case);
 						}
 					}
 				}
@@ -208,7 +214,10 @@ public static class Plateau
 	{
 		if (!@case.isHidden) return;
 
-		if (@case.isMarked) @case.Demarque();
+		if (@case.isMarked)
+			@case.Questionne();
+		else if (@case.isQuestioned)
+			@case.Demarque();
 		else @case.Marque();
 	}
 

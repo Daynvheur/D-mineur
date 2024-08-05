@@ -1,19 +1,36 @@
-[gd_scene load_steps=15 format=3 uid="uid://br32jtvcb04mx"]
+[gd_scene load_steps=32 format=3 uid="uid://br32jtvcb04mx"]
 
 [ext_resource type="Script" path="res://FD_mineur.cs" id="1_0ccyq"]
 [ext_resource type="Texture2D" uid="uid://cb0e3pwqjofua" path="res://Images/q.png" id="3_anw1j"]
+[ext_resource type="Texture2D" uid="uid://b32ofuuqhnaph" path="res://Images/mHover.png" id="3_s0af1"]
 [ext_resource type="Texture2D" uid="uid://cdqbhrq2tglnq" path="res://Images/_.png" id="4_n2ou2"]
 [ext_resource type="Texture2D" uid="uid://7krab2h53b4" path="res://Images/d.png" id="4_vl0wn"]
 [ext_resource type="Texture2D" uid="uid://wakoirbfgiul" path="res://Images/m.png" id="5_dgtwe"]
+[ext_resource type="Texture2D" uid="uid://dhplfki843sap" path="res://Images/qHover.png" id="5_pq28j"]
+[ext_resource type="Texture2D" uid="uid://djxdqcxigjd73" path="res://Images/_Press.png" id="6_62uc2"]
+[ext_resource type="Texture2D" uid="uid://c3j66umdtc7w0" path="res://Images/_Hover.png" id="7_76siv"]
 [ext_resource type="Texture2D" uid="uid://cilgrlsoksgdn" path="res://Images/0.png" id="7_b7pcu"]
+[ext_resource type="Texture2D" uid="uid://ca50tic7k828t" path="res://Images/dHover.png" id="7_igbws"]
 [ext_resource type="Texture2D" uid="uid://1citckjppaoq" path="res://Images/1.png" id="8_1tclq"]
+[ext_resource type="Texture2D" uid="uid://4laq8li8p1s1" path="res://Images/_Focus.png" id="8_ns7f4"]
 [ext_resource type="Texture2D" uid="uid://br7nv0hh4hrbw" path="res://Images/2.png" id="9_d6uks"]
 [ext_resource type="Texture2D" uid="uid://biayqdlq8kqfo" path="res://Images/3.png" id="10_6w7kf"]
 [ext_resource type="Texture2D" uid="uid://osle5r8aso8l" path="res://Images/4.png" id="11_uu66d"]
+[ext_resource type="Texture2D" uid="uid://cagyfbsh06la4" path="res://Images/0Press.png" id="13_3p1vp"]
 [ext_resource type="Texture2D" uid="uid://dtgf0g0d3t144" path="res://Images/5.png" id="13_lcq1b"]
 [ext_resource type="Texture2D" uid="uid://pdupl21vwqco" path="res://Images/6.png" id="14_bt53i"]
+[ext_resource type="Texture2D" uid="uid://bo6aq0muupl66" path="res://Images/0Hover.png" id="14_qqtdm"]
 [ext_resource type="Texture2D" uid="uid://chf423s7lraer" path="res://Images/7.png" id="15_ibfkb"]
+[ext_resource type="Texture2D" uid="uid://daeid3bpdtjs1" path="res://Images/0Focus.png" id="15_myi7w"]
 [ext_resource type="Texture2D" uid="uid://bpahpjr3wpxw0" path="res://Images/8.png" id="16_01if4"]
+[ext_resource type="Texture2D" uid="uid://6fhw3nduwsck" path="res://Images/1Hover.png" id="17_gpjeh"]
+[ext_resource type="Texture2D" uid="uid://c3fqlf1460ww6" path="res://Images/2Hover.png" id="19_4umho"]
+[ext_resource type="Texture2D" uid="uid://b2ukwge015eo6" path="res://Images/3Hover.png" id="21_tvpaa"]
+[ext_resource type="Texture2D" uid="uid://bovhmocrmbc7p" path="res://Images/4Hover.png" id="23_4dlm8"]
+[ext_resource type="Texture2D" uid="uid://kufqjchu0u5l" path="res://Images/5Hover.png" id="25_xgdoc"]
+[ext_resource type="Texture2D" uid="uid://bevr6dmko8puq" path="res://Images/6Hover.png" id="27_tkb4t"]
+[ext_resource type="Texture2D" uid="uid://b1podcenlto3l" path="res://Images/7Hover.png" id="29_gcn3l"]
+[ext_resource type="Texture2D" uid="uid://oan7f47fk26u" path="res://Images/8Hover.png" id="31_d0312"]
 
 [node name="FD_mineur" type="Control" node_paths=PackedStringArray("HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
 layout_mode = 3
@@ -23,7 +40,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0ccyq")
-isGameOver = true
 HBoxContainer = NodePath("HBoxContainer")
 TsslReste = NodePath("HBoxContainer/TsslReste")
 TsslTotal = NodePath("HBoxContainer/TsslTotal")
@@ -31,11 +47,14 @@ ProgressBar = NodePath("HBoxContainer/ProgressBar")
 TsslGameOver = NodePath("HBoxContainer/TsslGameOver")
 TsslTemps = NodePath("HBoxContainer/TsslTemps")
 Timer = NodePath("Timer")
+taillePlateau = Vector2i(25, 25)
+mines = 63
+isSeeded = true
 ImagesArray = {
 -5: {
 0: ExtResource("5_dgtwe"),
 1: null,
-2: null,
+2: ExtResource("3_s0af1"),
 3: null,
 4: null,
 5: null
@@ -43,7 +62,7 @@ ImagesArray = {
 -4: {
 0: ExtResource("3_anw1j"),
 1: null,
-2: null,
+2: ExtResource("5_pq28j"),
 3: null,
 4: null,
 5: null
@@ -51,17 +70,17 @@ ImagesArray = {
 -3: {
 0: ExtResource("4_vl0wn"),
 1: null,
-2: null,
+2: ExtResource("7_igbws"),
 3: null,
 4: null,
 5: null
 },
 -2: {
 0: ExtResource("4_n2ou2"),
-1: null,
-2: null,
+1: ExtResource("6_62uc2"),
+2: ExtResource("7_76siv"),
 3: null,
-4: null,
+4: ExtResource("8_ns7f4"),
 5: null
 },
 -1: {
@@ -74,16 +93,16 @@ ImagesArray = {
 },
 0: {
 0: ExtResource("7_b7pcu"),
-1: null,
-2: null,
+1: ExtResource("13_3p1vp"),
+2: ExtResource("14_qqtdm"),
 3: null,
-4: null,
+4: ExtResource("15_myi7w"),
 5: null
 },
 1: {
 0: ExtResource("8_1tclq"),
 1: null,
-2: null,
+2: ExtResource("17_gpjeh"),
 3: null,
 4: null,
 5: null
@@ -91,7 +110,7 @@ ImagesArray = {
 2: {
 0: ExtResource("9_d6uks"),
 1: null,
-2: null,
+2: ExtResource("19_4umho"),
 3: null,
 4: null,
 5: null
@@ -99,7 +118,7 @@ ImagesArray = {
 3: {
 0: ExtResource("10_6w7kf"),
 1: null,
-2: null,
+2: ExtResource("21_tvpaa"),
 3: null,
 4: null,
 5: null
@@ -107,7 +126,7 @@ ImagesArray = {
 4: {
 0: ExtResource("11_uu66d"),
 1: null,
-2: null,
+2: ExtResource("23_4dlm8"),
 3: null,
 4: null,
 5: null
@@ -115,7 +134,7 @@ ImagesArray = {
 5: {
 0: ExtResource("13_lcq1b"),
 1: null,
-2: null,
+2: ExtResource("25_xgdoc"),
 3: null,
 4: null,
 5: null
@@ -123,7 +142,7 @@ ImagesArray = {
 6: {
 0: ExtResource("14_bt53i"),
 1: null,
-2: null,
+2: ExtResource("27_tkb4t"),
 3: null,
 4: null,
 5: null
@@ -131,7 +150,7 @@ ImagesArray = {
 7: {
 0: ExtResource("15_ibfkb"),
 1: null,
-2: null,
+2: ExtResource("29_gcn3l"),
 3: null,
 4: null,
 5: null
@@ -139,7 +158,7 @@ ImagesArray = {
 8: {
 0: ExtResource("16_01if4"),
 1: null,
-2: null,
+2: ExtResource("31_d0312"),
 3: null,
 4: null,
 5: null

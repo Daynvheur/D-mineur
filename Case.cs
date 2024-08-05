@@ -30,7 +30,8 @@ public class Case
 
 	public bool isHidden; //La case n'est pas dévoilée
 	public bool isMined; //La case n'est pas minée (elle peut le devenir)
-	public bool isMarked; //La case n'est pas marquée comme minée
+	public bool isMarked; //La case est marquée comme minée
+	public bool isQuestioned; //La case est décorée, mais sans que cela n'entre en compte
 	public int HasMineVoisines => Voisines.Count(c => c.isMined);
 	public List<Case> Voisines { get; set; } = [];
 
@@ -53,12 +54,13 @@ public class Case
 
 	private Case()
 	{ }
-	public Case(Vector2I xy, bool _isMined = false, bool _isHidden = true, bool _isMarked = false)
+	public Case(Vector2I xy, bool _isMined = false, bool _isHidden = true, bool _isMarked = false, bool _isQuestion = false)
 	{
 		populationId = population++;
 		isHidden = _isHidden;
 		isMarked = _isMarked;
 		isMined = _isMined;
+		isQuestioned = _isQuestion;
 		Image = Plateau.AddCase?.Invoke(Size.Me * xy);
 		if (Image is not null && Plateau.CaseClick is not null)
 			Image.GuiInput += Plateau.CaseClick(this);
@@ -67,18 +69,29 @@ public class Case
 	public void Reveal()
 	{
 		isHidden = false;
+		isMarked = false;
+		isQuestioned = false;
 		Refresh();
 	}
 
 	public void Marque()
 	{
 		isMarked = true;
+		isQuestioned = false;
+		Refresh();
+	}
+
+	public void Questionne()
+	{
+		isMarked = false;
+		isQuestioned = true;
 		Refresh();
 	}
 
 	public void Demarque()
 	{
 		isMarked = false;
+		isQuestioned = false;
 		Refresh();
 	}
 
@@ -88,6 +101,7 @@ public class Case
 		isHidden = save.isHidden;
 		isMined = save.isMined;
 		isMarked = save.isMarked;
+		isQuestioned = save.isQuestioned;
 		Image = save.Image;
 		Refresh();
 	}
@@ -99,6 +113,7 @@ public class Case
 			isHidden = isHidden,
 			isMined = isMined,
 			isMarked = isMarked,
+			isQuestioned = isQuestioned,
 			Image = Image
 		};
 	}
@@ -113,6 +128,7 @@ public class Case
 		isMined = false;
 		isMarked = false;
 		isHidden = false;
+		isQuestioned = false;
 		Refresh();
 		Voisines.ForEach(c => c.Refresh());
 	}
