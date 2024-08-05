@@ -15,24 +15,29 @@ using System.Linq;
 //    }
 //}
 
+public class GetSetT<T>(T _value, Action? _action = null)
+{
+	public T Me { get => _value; set { _value = value; _action?.Invoke(); } }
+}
+
 public class Case
 {
-	public static int population = 0; //Déclaration d'existence dans la population
+	private static int population = 0; //Déclaration d'existence dans la population
 	public int populationId;
-	public static int Size_x { get; set; } = 12 * 2;
-	public static int Size_y { get; set; } = 12 * 2;
+	public static GetSetT<float> Zoom { get; set; } = new (1, static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me));
+	public static GetSetT<Vector2I> BaseSize { get; set; } = new(new(12, 12), static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me));
+	public static GetSetT<Vector2I> Size { get; set; } = new(BaseSize.Me);
 
-	//private static int nbVoisines = 0;
 	public bool isHidden; //La case n'est pas dévoilée
 	public bool isMined; //La case n'est pas minée (elle peut le devenir)
 	public bool isMarked; //La case n'est pas marquée comme minée
 	public int HasMineVoisines => Voisines.Count(c => c.isMined);
 	public List<Case> Voisines { get; set; } = [];
 
-	//public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
 	public TextureButton? Image { get; set; }
 
-	private const string imgDir = @"Images\";
+	//public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
+	//private const string imgDir = @"Images\";
 
 	//private static readonly Image imgHidden = Image.FromFile(imgDir + "_.png");
 
@@ -48,36 +53,33 @@ public class Case
 
 	private Case()
 	{ }
-	public Case(int i_x, int i_y, bool _isMined = false, bool _isHidden = true, bool _isMarked = false)
+	public Case(Vector2I xy, bool _isMined = false, bool _isHidden = true, bool _isMarked = false)
 	{
 		populationId = population++;
 		isHidden = _isHidden;
 		isMarked = _isMarked;
 		isMined = _isMined;
-		Image = Plateau.AddCase?.Invoke(i_x * Size_x, i_y * Size_y);
+		Image = Plateau.AddCase?.Invoke(Size.Me * xy);
 		if (Image is not null && Plateau.CaseClick is not null)
 			Image.GuiInput += Plateau.CaseClick(this);
 	}
 
 	public void Reveal()
 	{
-		//Image = !isMined ? Image.FromFile(imgDir + HasMineVoisines + ".png") : Image.FromFile(imgDir + "m.png");
 		isHidden = false;
-		Plateau.SetTexture?.Invoke(this);
+		Refresh();
 	}
 
 	public void Marque()
 	{
-		//Image = Image.FromFile(imgDir + "d.png");
 		isMarked = true;
-		Plateau.SetTexture?.Invoke(this);
+		Refresh();
 	}
 
 	public void Demarque()
 	{
-		//Image = imgHidden;
 		isMarked = false;
-		Plateau.SetTexture?.Invoke(this);
+		Refresh();
 	}
 
 	public void Restore()
@@ -87,7 +89,7 @@ public class Case
 		isMined = save.isMined;
 		isMarked = save.isMarked;
 		Image = save.Image;
-		Plateau.SetTexture?.Invoke(this);
+		Refresh();
 	}
 
 	public void Save()
@@ -103,7 +105,6 @@ public class Case
 
 	public void Refresh()
 	{
-		if (isHidden) return;
 		Plateau.SetTexture?.Invoke(this);
 	}
 

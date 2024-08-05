@@ -61,6 +61,21 @@ public partial class FD_mineur : Control
 	public double elapsedTime = 0;
 
 	[Export]
+	public double elapsedTotalTime = 0;
+
+	[Export]
+	public Vector2I taillePlateau = Vector2I.One;
+
+	[Export]
+	public int mines = 0;
+
+	[Export]
+	public bool isSeeded = false;
+
+	[Export]
+	public int seed = 1337;
+
+	[Export]
 	public Dictionary<ETexture, Dictionary<Textures, Resource?>> ImagesArray { get; set; } = new()
 	{
 		{ ETexture.Minee, new()
@@ -213,8 +228,9 @@ public partial class FD_mineur : Control
 	{
 		Plateau.SetGameOver = (gameOver) =>
 		{
+			elapsedTime = 0;
 			isGameOver = gameOver;
-			TsslGameOver?.SetVisible(gameOver);
+			TsslGameOver?.SetVisible(isGameOver);
 		};
 		Plateau.UpdateMines = (int min, int marques, int max) =>
 		{
@@ -224,12 +240,12 @@ public partial class FD_mineur : Control
 			ProgressBar?.SetValue(marques);
 			ProgressBar?.SetMax(max);
 		};
-		Plateau.AddCase = (int x, int y) =>
+		Plateau.AddCase = (Vector2I xy) =>
 		{
 			var bouton = new TextureButton
 			{
-				Position = new(x, y),
-				Size = new(Case.Size_x, Case.Size_y),
+				Position = xy,
+				Size = Case.Size.Me,
 				StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered,
 			};
 			SetTextures(bouton, ImagesArray[ETexture.Fermee]);
@@ -251,15 +267,24 @@ public partial class FD_mineur : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		if (TsslGameOver is not null)
-		{
-			TsslGameOver.SetVisible(isGameOver);
-			TsslGameOver.GuiInput += _ => Plateau.RestaurePlateau();
-		}
-		TsslTemps?.SetText(FormatTime(elapsedTime));
-		Plateau.InitialisePlateau();
+		//if (TsslGameOver != null) TsslGameOver.GuiInput += @event => { Console.WriteLine("bla."); Plateau.RestaurePlateau(); };
+		if (HBoxContainer != null) HBoxContainer!.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.RestaurePlateau(); elapsedTime = 0; } };
+		//DisplayServer.ScreenGetSize;//
+		//DisplayServer.ScreenGetScale;//Linux+Mac seulement. :(
+		//DisplayServer.WindowGetSize;//
+		//DisplayServer.WindowSetSize;//
+		//GetWindow().CurrentScreen.;//
+		//GetWindow().;//
+		Case.Zoom.Me = 2.5f;
+		Case.BaseSize.Me = (Vector2I)(DisplayServer.ScreenGetSize(GetWindow().CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
 
-		GetWindow().Size = new(Plateau.X * Case.Size_x, (Plateau.Y * Case.Size_y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		GetWindow().GuiSnapControlsToPixels = true;
+
+		Plateau.InitialisePlateau(taillePlateau, mines, isSeeded ? seed : null, gameOver: isGameOver);
+		Vector2I caseSize = Case.Size.Me;
+		Vector2I plateauSize = Plateau.Size.Me;
+		GetWindow().Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		GetWindow().MoveToCenter();
 		Timer?.Start();
 	}
 
@@ -267,6 +292,7 @@ public partial class FD_mineur : Control
 	public override void _Process(double delta)
 	{
 		elapsedTime += delta;
+		elapsedTotalTime += delta;
 
 		TsslTemps?.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
 	}
@@ -280,21 +306,27 @@ public partial class FD_mineur : Control
 				case Textures.Normal:
 					bouton.TextureNormal = (Texture2D?)texture.Value;
 					break;
+
 				case Textures.Pressed:
 					bouton.TexturePressed = (Texture2D?)texture.Value;
 					break;
+
 				case Textures.Hover:
 					bouton.TextureHover = (Texture2D?)texture.Value;
 					break;
+
 				case Textures.Disabled:
 					bouton.TextureDisabled = (Texture2D?)texture.Value;
 					break;
+
 				case Textures.Focused:
 					bouton.TextureFocused = (Texture2D?)texture.Value;
 					break;
+
 				case Textures.ClickMask:
 					bouton.TextureClickMask = (Bitmap?)texture.Value;
 					break;
+
 				default:
 					break;
 			}

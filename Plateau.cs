@@ -6,45 +6,51 @@ using System.Linq;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1121:Assignments should not be made from within sub-expressions")]
 public static class Plateau
 {
-	private static int x = 1;
-	private static int y = 1;
+	public static int Surface(this Vector2I vector) => vector.X * vector.Y;
+
+	public static GetSetT<Vector2I> Size { get; private set; } = new(new(1, 1));
 	private static Case[] lPlateau = [];
 	private static int minesMax = 0;
 	private static int minesMarquees = 0;
 	private static int minesMin = 0;
 
 	public static Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
-	public static int X { get => x; private set => x = value; }
-	public static int Y { get => y; private set => y = value; }
-	public static Func<int, int, TextureButton>? AddCase { get; set; }
+
+	//public static int X { get => x; private set => x = value; }
+	//public static int Y { get => y; private set => y = value; }
+	public static Func<Vector2I, TextureButton>? AddCase { get; set; }
+
 	public static Func<Case, Control.GuiInputEventHandler>? CaseClick { get; set; }
 	public static Action<Case>? SetTexture { get; set; }
 	public static Action<bool>? SetGameOver { get; set; }
 	public static Action<int, int, int>? UpdateMines { get; set; }
-	public static int MinesMax { get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
-	public static int MinesMarquees { get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
-	public static int MinesMin { get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
+	public static int MinesMax
+	{ get => minesMax; set { minesMax = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
+	public static int MinesMarquees
+	{ get => minesMarquees; set { minesMarquees = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
+	public static int MinesMin
+	{ get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(int largeur = 25, int hauteur = 25, int mines = 63, int seed = 1337) //50, 50, 250
+	public static void InitialisePlateau(Vector2I size, int mines = 0, int? seed = 1337, bool gameOver = false) //50, 50, 250
 	{
 		int mining = 0;
-		Random rand = new(/*seed*/);
-		int iMax = largeur * hauteur;
+		Random rand = seed is null ? new() : new(seed.Value);
+		int iMax = size.Surface();
 
 		//Initialisation de la liste des cases du plateau
 		LPlateau = new Case[iMax];
 		for (int i = 0; i < iMax; i++)
 		{
-			int i_x = i % largeur;
-			int i_y = i / largeur;
-			LPlateau[i] = new(i_x, i_y, (rand.Next(iMax - i) < mines - mining) && mining == mining++); //Référencement de la case
+			int i_x = i % size.X;
+			int i_y = i / size.X;
+			LPlateau[i] = new(new(i_x, i_y), (rand.Next(iMax - i) < mines - mining) && mining == mining++); //Référencement de la case
 
-			if (i >= largeur) //étage 1+
+			if (i >= size.X) //étage 1+
 			{
-				if (i_x > 0) LPlateau[i].Voisines.Add(LPlateau[i - 1 - largeur]); //haut gauche
-				LPlateau[i].Voisines.Add(LPlateau[i - largeur]); //haut centre
-				if (i_x < largeur - 1) LPlateau[i].Voisines.Add(LPlateau[i + 1 - largeur]); //droite
+				if (i_x > 0) LPlateau[i].Voisines.Add(LPlateau[i - 1 - size.X]); //haut gauche
+				LPlateau[i].Voisines.Add(LPlateau[i - size.X]); //haut centre
+				if (i_x < size.X - 1) LPlateau[i].Voisines.Add(LPlateau[i + 1 - size.X]); //droite
 			}
 
 			if (i_x > 0) LPlateau[i].Voisines.Add(LPlateau[i - 1]); //gauche
@@ -53,9 +59,9 @@ public static class Plateau
 			LPlateau[i].Save();
 		}
 
-		X = largeur;
-		Y = hauteur;
+		Size.Me = size;
 		MinesMax = mines;
+		SetGameOver?.Invoke(gameOver);
 	}
 
 	public static void RestaurePlateau()
@@ -63,7 +69,7 @@ public static class Plateau
 		Console.Write($"Je suis la fonction {nameof(RestaurePlateau)}.");
 		int mining = 0;
 		Random rand = new(/*seed*/);
-		int iMax = X * Y;
+		int iMax = Size.Me.X * Size.Me.Y;
 
 		for (int i = 0; i < iMax; i++)
 		{
@@ -72,7 +78,8 @@ public static class Plateau
 			LPlateau[i].isMined = (rand.Next(iMax - i) < MinesMax - mining) && mining == mining++;
 			LPlateau[i].Save();
 		}
-    }
+		SetGameOver?.Invoke(false);
+	}
 
 	public static void InteractionDispatcher(InputEvent @event, Case @case)
 	{
@@ -125,16 +132,10 @@ public static class Plateau
 					}
 				}
 				break;
-				//case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && (mouseEvent.ButtonIndex == MouseButton.Left) && (@case.Image?.IsHovered() == true):
-				//	Console.WriteLine($"{{{nameof(mouseEvent.ButtonIndex)}:{mouseEvent.ButtonIndex},{nameof(mouseEvent.ButtonMask)}:{mouseEvent.ButtonMask},{nameof(mouseEvent.Pressed)}:{mouseEvent.Pressed}}}");
-				//	Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-				//	Interaction1(@case);
+				//case InputEventKey keyEvent:
+				//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
+				//	Console.Write($"Je suis la case {@case.populationId} ! ");
 				//	break;
-
-			//case InputEventKey keyEvent:
-			//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
-			//	Console.Write($"Je suis la case {@case.populationId} ! ");
-			//	break;
 
 				//default:
 				//	Console.WriteLine($"Je suis un événement {@event.GetType()}.");
