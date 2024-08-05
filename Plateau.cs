@@ -88,12 +88,49 @@ public static class Plateau
 				//case InputEventMidi:
 				//case InputEventShortcut:
 				//case InputEventAction:
-				//break;
-			case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
-				Console.WriteLine($"{{{nameof(mouseEvent.ButtonIndex)}:{mouseEvent.ButtonIndex},{nameof(mouseEvent.ButtonMask)}:{mouseEvent.ButtonMask},{nameof(mouseEvent.Pressed)}:{mouseEvent.Pressed}}}");
-				Console.Write($"Je suis la case {@case.populationId} ! ");
-				Interaction1(@case);
+			case InputEventMouseMotion mouseMove:
+				if ((@case.Image?.IsHovered()) == true)
+				{
+					Console.WriteLine("I'm in.");
+				}
+				else
+				{
+					Console.WriteLine("I'm out.");
+				}
 				break;
+
+			case InputEventMouseButton mouseInput:
+				Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				if (mouseInput.ButtonIndex == MouseButton.Right)
+				{
+					Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
+				}
+				else if (mouseInput.ButtonIndex != MouseButton.Left)
+				{
+					Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
+				}
+				else
+				{
+					if (mouseInput.Pressed)
+						Console.WriteLine("Je suis pressé !");
+					else
+					{
+						if ((@case.Image?.IsHovered()) != true)
+							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+						else
+						{
+							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				Interaction1(@case);
+						}
+					}
+				}
+				break;
+				//case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && (mouseEvent.ButtonIndex == MouseButton.Left) && (@case.Image?.IsHovered() == true):
+				//	Console.WriteLine($"{{{nameof(mouseEvent.ButtonIndex)}:{mouseEvent.ButtonIndex},{nameof(mouseEvent.ButtonMask)}:{mouseEvent.ButtonMask},{nameof(mouseEvent.Pressed)}:{mouseEvent.Pressed}}}");
+				//	Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				//	Interaction1(@case);
+				//	break;
+
 			//case InputEventKey keyEvent:
 			//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
 			//	Console.Write($"Je suis la case {@case.populationId} ! ");
