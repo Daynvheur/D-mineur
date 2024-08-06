@@ -15,11 +15,7 @@ public static class Plateau
 	private static int minesMin = 0;
 
 	public static Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
-
-	//public static int X { get => x; private set => x = value; }
-	//public static int Y { get => y; private set => y = value; }
 	public static Func<Vector2I, TextureButton>? AddCase { get; set; }
-
 	public static Func<Case, Control.GuiInputEventHandler>? CaseClick { get; set; }
 	public static Action<Case>? SetTexture { get; set; }
 	public static Action<bool>? SetGameOver { get; set; }
@@ -69,14 +65,12 @@ public static class Plateau
 
 	public static void RestaurePlateau()
 	{
-		Console.Write($"Je suis la fonction {nameof(RestaurePlateau)}.");
 		int mining = 0;
 		Random rand = new(/*seed*/);
 		int iMax = Size.Me.X * Size.Me.Y;
 
 		for (int i = 0; i < iMax; i++)
 		{
-			Console.Write($"{LPlateau[i] is null}.");
 			LPlateau[i].Restore();
 			LPlateau[i].isMined = (rand.Next(iMax - i) < MinesMax - mining) && mining == mining++;
 			LPlateau[i].Save();
@@ -98,44 +92,45 @@ public static class Plateau
 			//case InputEventMidi:
 			//case InputEventShortcut:
 			//case InputEventAction:
-			case InputEventMouseMotion mouseMove:
-				if ((@case.Image?.IsHovered()) == true)
-				{
-					Console.WriteLine($"I'm in {@case.populationId}.");
-				}
-				else
-				{
-					Console.WriteLine($"I'm out {@case.populationId}.");
-				}
-				break;
+			//case InputEventMouseMotion mouseMove:
+			//	if (@case.Image?.GetRect().HasPoint(mouseMove.Position) == true)
+			//	{
+			//		Console.WriteLine($"I'm in {@case.populationId}.");
+			//	}
+			//	else
+			//	{
+			//		Console.WriteLine($"I'm out {@case.populationId}.");
+			//	}
+			//	break;
 
 			case InputEventMouseButton mouseInput:
-				Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-				if (mouseInput.ButtonIndex == MouseButton.Right)
+				Console.WriteLine($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				//if (mouseInput.ButtonIndex != MouseButton.Left)
+				//{
+				//	Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
+				//}
+				//else
+				if (mouseInput.ButtonIndex == MouseButton.Left)
 				{
-					if (mouseInput.Pressed)
-						Interaction2(@case);
-					else
-						Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
-				}
-				else if (mouseInput.ButtonIndex != MouseButton.Left)
-				{
-					Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
-				}
-				else
-				{
-					if (mouseInput.Pressed)
-						Console.WriteLine("Je suis pressé !");
-					else
+					if (!mouseInput.Pressed)
 					{
-						if ((@case.Image?.IsHovered()) != true)
-							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-						else
+						if (@case.Image?.IsHovered() == true)
 						{
 							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
 							Interaction1(@case);
 						}
+						//else
+						//	Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
 					}
+					//else
+					//	Console.WriteLine("Je suis pressé !");
+				}
+				else if (mouseInput.ButtonIndex == MouseButton.Right)
+				{
+					if (mouseInput.Pressed)
+						Interaction2(@case);
+					//else
+					//	Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
 				}
 				break;
 				//case InputEventKey keyEvent:
