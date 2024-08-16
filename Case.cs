@@ -24,8 +24,10 @@ public class Case
 {
 	private static int population = 0; //Déclaration d'existence dans la population
 	public int populationId;
-	public static GetSetT<float> Zoom { get; set; } = new (1, static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me));
-	public static GetSetT<Vector2I> BaseSize { get; set; } = new(new(12, 12), static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me));
+
+	private static readonly Action? setSize = static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me);
+	public static GetSetT<float> Zoom { get; set; } = new (1, setSize);
+	public static GetSetT<Vector2I> BaseSize { get; set; } = new(new(12, 12), setSize);
 	public static GetSetT<Vector2I> Size { get; set; } = new(BaseSize.Me);
 
 	public bool isHidden; //La case n'est pas dévoilée
