@@ -275,16 +275,17 @@ public partial class FD_mineur : Control
 		//DisplayServer.WindowSetSize;//
 		//GetWindow().CurrentScreen.;//
 		//GetWindow().;//
+		Window window = GetWindow();
 		Case.Zoom.Me = 2.5f;
-		Case.BaseSize.Me = (Vector2I)(DisplayServer.ScreenGetSize(GetWindow().CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
+		Case.BaseSize.Me = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
 
-		GetWindow().GuiSnapControlsToPixels = true;
+		window.GuiSnapControlsToPixels = true;
 
 		Plateau.InitialisePlateau(taillePlateau, mines, isSeeded ? seed : null, gameOver: isGameOver);
 		Vector2I caseSize = Case.Size.Me;
 		Vector2I plateauSize = Plateau.Size.Me;
-		GetWindow().Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
-		GetWindow().MoveToCenter();
+		window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		window.MoveToCenter();
 		Timer?.Start();
 	}
 
