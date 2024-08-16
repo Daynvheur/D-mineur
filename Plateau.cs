@@ -195,17 +195,10 @@ public static class Plateau
 				}
 				else
 				{
-					if (@case.estMinée && @case.estMarquée)
-					{
+					if (@case.estMarquée)
 						@case.Démine();
-						MinesMax -= 1;
-					}
 					else
-					{
-						var mines = @case.Voisines.Where(c => c.estMinée).ToList();
-						mines.ForEach(c => c.Démine());
-						MinesMax -= mines.Count;
-					}
+						@case.Voisines.Where(c => c.estMarquée).ToList().ForEach(c => c.Démine());
 				}
 			}
 		}

@@ -71,6 +71,7 @@ public class Case
 
 	public void Révèle()
 	{
+		if (estFermée && estMarquée) Plateau.MinesMarquees--;
 		estFermée = false;
 		estMarquée = false;
 		estQuestionnée = false;
@@ -82,6 +83,7 @@ public class Case
 
 	public void Marque()
 	{
+		if (estFermée && !estMarquée) Plateau.MinesMarquees++;
 		estMarquée = true;
 		estQuestionnée = false;
 		Rafraîchit();
@@ -89,6 +91,7 @@ public class Case
 
 	public void Questionne()
 	{
+		if (estFermée && estMarquée) Plateau.MinesMarquees--;
 		estMarquée = false;
 		estQuestionnée = true;
 		Rafraîchit();
@@ -96,6 +99,7 @@ public class Case
 
 	public void Démarque()
 	{
+		if (estFermée && estMarquée) Plateau.MinesMarquees--;
 		estMarquée = false;
 		estQuestionnée = false;
 		Rafraîchit();
@@ -132,6 +136,11 @@ public class Case
 
 	internal void Démine()
 	{
+		if (estFermée)
+		{
+			if (estMinée) Plateau.MinesMax--;
+			if (estMarquée) Plateau.MinesMarquees--;
+		}
 		estMinée = false;
 		estMarquée = false;
 		estFermée = false;
