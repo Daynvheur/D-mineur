@@ -162,7 +162,7 @@ public static class Plateau
 	{
 		if (@case.estFermée && !@case.estMarquée)
 		{
-			RevealCase(@case);
+			@case.Révèle();
 			if (@case.estMinée) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la mine incorrectement dévoilées
 			{
 				LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle());
@@ -173,24 +173,25 @@ public static class Plateau
 		{
 			//Récupération du nombre de cases alentours voilées et marquées
 			var lookupHiddenMarked = @case.Voisines.Where(c => c.estFermée).ToLookup(c => c.estMarquée);
-			int voisinesVoilées = lookupHiddenMarked[false].Count();
+			var voisinesFerméesNonMarquées = lookupHiddenMarked[false];
+			int voisinesVoilées = voisinesFerméesNonMarquées.Count();
 			int voisinesMarquées = lookupHiddenMarked[true].Count();
 
 			int minesVoisines = @case.AMinesVoisines;
-			if (voisinesVoilées != 0 && minesVoisines > 0 && voisinesVoilées + voisinesMarquées == minesVoisines)//Si le nombre de voilées (augmenté de celles déjà marquées) correspond aux voisines, marquer les voilées voisines
+			if (voisinesVoilées != 0 && minesVoisines > 0 && voisinesVoilées + voisinesMarquées == minesVoisines) //Si le nombre de voilées (augmenté de celles déjà marquées) correspond aux voisines, marquer les voilées voisines
 			{
-				lookupHiddenMarked[false].ToList().ForEach(c => c.Marque());
+				voisinesFerméesNonMarquées.ToList().ForEach(c => c.Marque());
 			}
 			else if (voisinesMarquées == minesVoisines)
 			{
-				if (lookupHiddenMarked[false].Any())
+				if (voisinesFerméesNonMarquées.Any())
 				{
-					if (lookupHiddenMarked[false].Any(c => c.estMinée)) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la/les mine/s incorrectement dévoilées
+					if (voisinesFerméesNonMarquées.Any(c => c.estMinée)) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la/les mine/s incorrectement dévoilées
 					{
 						LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle());
 						//tsslReste.Text = "0"; //GameOver (raccourci)
 					}
-					else lookupHiddenMarked[false].ToList().ForEach(RevealCase);
+					else voisinesFerméesNonMarquées.ToList().ForEach(c => c.Révèle());
 				}
 				else
 				{
@@ -203,8 +204,6 @@ public static class Plateau
 					{
 						var mines = @case.Voisines.Where(c => c.estMinée).ToList();
 						mines.ForEach(c => c.Démine());
-						mines.ForEach(RevealCase); //[WIP]Il reste des cases voisines-de-voisines passant à zéro qui ne sont pas ouvertes en prolongement, ce qui donne des cases sans numéro collées à une case ne pouvant pas contenir de mine.
-						mines.ForEach(c => c.Voisines.Where(cv => !cv.estFermée && cv.AMinesVoisines == 0).ToList().ForEach(RevealCase));
 						MinesMax -= mines.Count;
 					}
 				}
@@ -228,13 +227,5 @@ public static class Plateau
 		else if (@case.estQuestionnée)
 			@case.Démarque();
 		else @case.Marque();
-	}
-
-	public static void RevealCase(Case @case)
-	{
-		@case.Révèle(); //Dévoiler celle-ci
-		if (@case.AMinesVoisines != 0) return; //S'il y a des mines dans le voisinage, s'arrêter là
-
-		@case.Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(RevealCase);
 	}
 }

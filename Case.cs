@@ -74,6 +74,9 @@ public class Case
 		estMarquée = false;
 		estQuestionnée = false;
 		Rafraîchit();
+
+		if (AMinesVoisines != 0) return; //S'il y a des mines dans le voisinage, s'arrêter là
+		Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(c => c.Révèle());
 	}
 
 	public void Marque()
@@ -133,6 +136,6 @@ public class Case
 		estFermée = false;
 		estQuestionnée = false;
 		Rafraîchit();
-		Voisines.ForEach(c => c.Rafraîchit());
+		Voisines.Where(c => !c.estFermée).ToList().ForEach(c => { if (c.AMinesVoisines == 0) c.Révèle(); else c.Rafraîchit(); });
 	}
 }
