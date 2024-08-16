@@ -1,7 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
-using System.Linq;
 
 public enum ETexture
 {
@@ -254,15 +252,17 @@ public partial class FD_mineur : Control
 			AddChild(bouton);
 			return bouton;
 		};
-		Plateau.MettreTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.estFermée
-			? @case.estMarquée
-				? ETexture.Marquee
-				: @case.estQuestionnée
-					? ETexture.Question
-					: ETexture.Fermee
-			: @case.estMinée
-				? ETexture.Minee
-				: (ETexture)@case.NbMinesVoisines]);
+		Plateau.MettreTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.estRatée
+			? ETexture.None
+			: @case.estFermée
+				? @case.estMarquée
+					? ETexture.Marquee
+					: @case.estQuestionnée
+						? ETexture.Question
+						: ETexture.Fermee
+				: @case.estMinée
+					? ETexture.Minee
+					: (ETexture)@case.NbMinesVoisines]);
 		Plateau.CliquerCase = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
 	}
 

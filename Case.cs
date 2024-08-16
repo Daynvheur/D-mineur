@@ -17,7 +17,8 @@ using System.Linq;
 
 public class GetSetT<T>(T _valeur, Action? _action = null)
 {
-	public T Moi { get => _valeur; set { _valeur = value; _action?.Invoke(); } }
+	public T Moi
+	{ get => _valeur; set { _valeur = value; _action?.Invoke(); } }
 }
 
 public class Case
@@ -26,7 +27,7 @@ public class Case
 	public int populationId;
 
 	private static readonly Action? MettreTaille = static () => Taille!.Moi = (Vector2I)((Vector2)TailleBase!.Moi * Zoom!.Moi);
-	public static GetSetT<float> Zoom { get; set; } = new (1, MettreTaille);
+	public static GetSetT<float> Zoom { get; set; } = new(1, MettreTaille);
 	public static GetSetT<Vector2I> TailleBase { get; set; } = new(new(12, 12), MettreTaille);
 	public static GetSetT<Vector2I> Taille { get; set; } = new(TailleBase.Moi);
 
@@ -34,6 +35,7 @@ public class Case
 	public bool estMinée; //La case n'est pas minée (elle peut le devenir)
 	public bool estMarquée; //La case est marquée comme minée
 	public bool estQuestionnée; //La case est décorée, mais sans que cela n'entre en compte
+	public bool estRatée; //La case obtient un visuel spécifique
 	public int NbMinesVoisines => Voisines.Count(c => c.estMinée);
 	public bool AMinesVoisines => Voisines.Any(c => c.estMinée);
 	public List<Case> Voisines { get; set; } = [];
@@ -57,28 +59,31 @@ public class Case
 
 	private Case()
 	{ }
-	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _estMarquée = false, bool _estQuestionnée = false)
+
+	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _estMarquée = false, bool _estQuestionnée = false, bool _estRatée = false)
 	{
 		populationId = population++;
 		estFermée = _estFermée;
 		estMarquée = _estMarquée;
 		estMinée = _estMinée;
 		estQuestionnée = _estQuestionnée;
+		estRatée = _estRatée;
 		Image = Plateau.AjouterCase?.Invoke(Taille.Moi * xy);
 		if (Image is not null && Plateau.CliquerCase is not null)
 			Image.GuiInput += Plateau.CliquerCase(this);
 	}
 
-	public void Révèle()
+	public void Ouvre(bool _estRatée = false)
 	{
 		if (estFermée && estMarquée) Plateau.MinesMarquees--;
 		estFermée = false;
 		estMarquée = false;
 		estQuestionnée = false;
+		estRatée = _estRatée;
 		Rafraîchit();
 
 		if (AMinesVoisines) return; //S'il y a des mines dans le voisinage, s'arrêter là
-		Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(c => c.Révèle());
+		Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(c => c.Ouvre());
 	}
 
 	public void Marque()
@@ -106,6 +111,7 @@ public class Case
 	}
 
 	public void Restaure() => Restaure(sauve);
+
 	public void Restaure(Case? cible)
 	{
 		if (cible is null) return;
@@ -113,6 +119,7 @@ public class Case
 		estMinée = cible.estMinée;
 		estMarquée = cible.estMarquée;
 		estQuestionnée = cible.estQuestionnée;
+		estRatée = cible.estRatée;
 		Image = cible.Image;
 		Rafraîchit();
 	}
@@ -125,6 +132,7 @@ public class Case
 			estMinée = estMinée,
 			estMarquée = estMarquée,
 			estQuestionnée = estQuestionnée,
+			estRatée = estRatée,
 			Image = Image
 		};
 	}
@@ -136,16 +144,9 @@ public class Case
 
 	internal void Démine()
 	{
-		if (estFermée)
-		{
-			if (estMinée) Plateau.MinesMax--;
-			if (estMarquée) Plateau.MinesMarquees--;
-		}
+		if (estFermée && estMinée) Plateau.MinesMax--;
 		estMinée = false;
-		estMarquée = false;
-		estFermée = false;
-		estQuestionnée = false;
-		Rafraîchit();
-		Voisines.Where(c => !c.estFermée).ToList().ForEach(c => { if (!c.AMinesVoisines) c.Révèle(); else c.Rafraîchit(); });
+		Ouvre();
+		Voisines.Where(c => !c.estFermée).ToList().ForEach(c => { if (!c.AMinesVoisines) c.Ouvre(); else c.Rafraîchit(); });
 	}
 }

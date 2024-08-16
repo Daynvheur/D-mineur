@@ -160,69 +160,105 @@ public static class Plateau
 
 	public static void Interaction1(Case @case)
 	{
-		if (@case.estFermée && !@case.estMarquée)
+		if (!@case.estFermée) //Si la case est OUVERTE
 		{
-			@case.Révèle();
-			if (@case.estMinée) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la mine incorrectement dévoilée
-			{
-				LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle());
-				MettreGameOver?.Invoke(true);
-			}
-		}
-		else
-		{
-			//Récupération du nombre de cases alentours voilées et marquées
-			var lookupHiddenMarked = @case.Voisines.Where(c => c.estFermée).ToLookup(c => c.estMarquée);
-			var voisinesFerméesNonMarquées = lookupHiddenMarked[false];
-			int voisinesVoilées = voisinesFerméesNonMarquées.Count();
-			int voisinesMarquées = lookupHiddenMarked[true].Count();
-
-			int minesVoisines = @case.NbMinesVoisines;
-			if (voisinesVoilées != 0 && minesVoisines > 0 && voisinesVoilées + voisinesMarquées == minesVoisines) //Si le nombre de voilées (augmenté de celles déjà marquées) correspond aux voisines, marquer les voilées voisines
-			{
-				voisinesFerméesNonMarquées.ToList().ForEach(c => c.Marque());
-			}
-			else if (voisinesMarquées == minesVoisines)
-			{
-				if (voisinesFerméesNonMarquées.Any())
-				{
-					if (voisinesFerméesNonMarquées.Any(c => c.estMinée)) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la/les mine/s incorrectement dévoilées
-					{
-						LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle());
-						//tsslReste.Text = "0"; //GameOver (raccourci)
-					}
-					else voisinesFerméesNonMarquées.ToList().ForEach(c => c.Révèle());
-				}
-				else
-				{
-					if (@case.estMarquée)
-						@case.Démine();
-					else
-						@case.Voisines.Where(c => c.estMarquée).ToList().ForEach(c => c.Démine());
-				}
-			}
-		}
-		List<Case> plateauVoilées = LPlateau.Where(c => c.estFermée).ToList();
-		//Si toutes les cases restantes sont minées, les marquer
-		if (plateauVoilées.Count == LPlateau.Count(c => c.estMinée))
-		{
-			plateauVoilées.ForEach(c => c.Marque());
-			MettreGameOver?.Invoke(true);
-		}
-	}
-
-	public static void Interaction2(Case @case)
-	{
-		if (!@case.estFermée)
-		{
-			if (!@case.AMinesVoisines)
+			if (!@case.AMinesVoisines) //Si PAS de mines voisines, marquer le plateau
 			{
 				var ouvertesIncomplètes = LPlateau.Where(c => !c.estFermée && c.AMinesVoisines && c.Voisines.Count(_c => _c.estFermée) == c.NbMinesVoisines).ToLookup(c => c.Voisines.Any(_c => _c.estFermée && !_c.estMarquée)); //Toutes les cases ouvertes, incomplètes ou complètes
 				if (ouvertesIncomplètes[true].Any())
 					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque()));
 				else
+				{
+					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine()));
+				}
+			}
+			else //S'il Y A des mines voisines
+			{
+				var voisinesFermées = @case.Voisines.Where(c => c.estFermée); //Récupération du nombre de fermées
+				var lookupVoisinesFerméesMarquées = voisinesFermées.ToLookup(c => c.estMarquée);
+				var voisinesFerméesNonMarquées = lookupVoisinesFerméesMarquées[false]; //et non marquées
+				var voisinesFerméesMarquées = lookupVoisinesFerméesMarquées[true];
+				int minesVoisines = @case.NbMinesVoisines;
+
+				if (voisinesFermées.Count() == minesVoisines) //Si le nombre de fermées correspond aux voisines, les marquer ou déminer
+				{
+					if (voisinesFerméesNonMarquées.Any()) //S'il y a des non-marquées, les marquer;
+						voisinesFerméesNonMarquées.ToList().ForEach(c => c.Marque());
+					else //sinon, déminer les voisines
+						voisinesFerméesMarquées.ToList().ForEach(c => c.Démine());
+				}
+				else if (voisinesFerméesMarquées.Count() == minesVoisines) //Sinon, si les marquages sont satisfaits
+				{
+					if (voisinesFerméesNonMarquées.Any(c => c.estMinée)) //mais qu'au-moins un est faux, fin de partie
+					{
+						voisinesFerméesNonMarquées.Where(c => c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+						FinTragique();
+					}
+					else //sinon, ouverture des cases supplémentaires
+						voisinesFerméesNonMarquées.ToList().ForEach(c => c.Ouvre());
+				}
+			}
+		}
+		else if (@case.estMarquée) //Si la case est MARQUÉE
+		{
+			if (!@case.estMinée)
+				FinTragique();
+			else
+				@case.Démine();
+		}
+		else //Si la case n'est NI ouverte, NI marquée
+		{
+			if (@case.estMinée)
+			{
+				@case.Ouvre(true);
+				FinTragique();
+			}
+			else
+				@case.Ouvre();
+		}
+
+		List<Case> plateauFermées = LPlateau.Where(c => c.estFermée).ToList();
+		//Si toutes les cases restantes sont forcément minées, les marquer
+		if (plateauFermées.Count == MinesMax)
+			plateauFermées.ForEach(c => c.Marque());
+		//Si toutes les cases marquées font le compte de mines, finaliser la partie
+		if (MinesMarquees == MinesMax)
+		{
+			LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+
+			MettreGameOver?.Invoke(true);
+		}
+	}
+
+	private static void FinTragique()
+	{
+		LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Ouvre());
+		LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+
+		MettreGameOver?.Invoke(true);
+	}
+
+	public static void Interaction2(Case @case)
+	{
+		if (!@case.estFermée) //Si la case est OUVERTE
+		{
+			if (!@case.AMinesVoisines) //Si PAS de mines voisines, marquer le plateau
+			{
+				var ouvertesIncomplètes = LPlateau.Where(c => !c.estFermée && c.AMinesVoisines && c.Voisines.Count(_c => _c.estFermée) == c.NbMinesVoisines).ToLookup(c => c.Voisines.Any(_c => _c.estFermée && !_c.estMarquée)); //Toutes les cases ouvertes, incomplètes ou complètes
+				if (ouvertesIncomplètes[true].Any())
+					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque()));
+				else
+				{
 					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine()));
 
+					List<Case> plateauVoilées = LPlateau.Where(c => c.estFermée).ToList();
+					//Si toutes les cases restantes sont minées, les marquer
+					if (plateauVoilées.Count == MinesMax)
+					{
+						plateauVoilées.ForEach(c => c.Marque());
+						MettreGameOver?.Invoke(true);
+					}
+				}
 			}
 		}
 
@@ -230,6 +266,16 @@ public static class Plateau
 			@case.Questionne();
 		else if (@case.estQuestionnée)
 			@case.Démarque();
-		else @case.Marque();
+		else
+		{
+			@case.Marque();
+			//Si toutes les cases marquées sont minées, finaliser la partie
+			if (MinesMarquees == MinesMax)
+			{
+				LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+
+				MettreGameOver?.Invoke(true);
+			}
+		}
 	}
 }
