@@ -34,7 +34,8 @@ public class Case
 	public bool estMinée; //La case n'est pas minée (elle peut le devenir)
 	public bool estMarquée; //La case est marquée comme minée
 	public bool estQuestionnée; //La case est décorée, mais sans que cela n'entre en compte
-	public int AMinesVoisines => Voisines.Count(c => c.estMinée);
+	public int NbMinesVoisines => Voisines.Count(c => c.estMinée);
+	public bool AMinesVoisines => Voisines.Any(c => c.estMinée);
 	public List<Case> Voisines { get; set; } = [];
 
 	public TextureButton? Image { get; set; }
@@ -75,7 +76,7 @@ public class Case
 		estQuestionnée = false;
 		Rafraîchit();
 
-		if (AMinesVoisines != 0) return; //S'il y a des mines dans le voisinage, s'arrêter là
+		if (AMinesVoisines) return; //S'il y a des mines dans le voisinage, s'arrêter là
 		Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(c => c.Révèle());
 	}
 
@@ -136,6 +137,6 @@ public class Case
 		estFermée = false;
 		estQuestionnée = false;
 		Rafraîchit();
-		Voisines.Where(c => !c.estFermée).ToList().ForEach(c => { if (c.AMinesVoisines == 0) c.Révèle(); else c.Rafraîchit(); });
+		Voisines.Where(c => !c.estFermée).ToList().ForEach(c => { if (!c.AMinesVoisines) c.Révèle(); else c.Rafraîchit(); });
 	}
 }

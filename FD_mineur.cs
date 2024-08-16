@@ -262,7 +262,7 @@ public partial class FD_mineur : Control
 					: ETexture.Fermee
 			: @case.estMinée
 				? ETexture.Minee
-				: (ETexture)@case.AMinesVoisines]);
+				: (ETexture)@case.NbMinesVoisines]);
 		Plateau.CliquerCase = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
 	}
 

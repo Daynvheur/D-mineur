@@ -177,7 +177,7 @@ public static class Plateau
 			int voisinesVoilées = voisinesFerméesNonMarquées.Count();
 			int voisinesMarquées = lookupHiddenMarked[true].Count();
 
-			int minesVoisines = @case.AMinesVoisines;
+			int minesVoisines = @case.NbMinesVoisines;
 			if (voisinesVoilées != 0 && minesVoisines > 0 && voisinesVoilées + voisinesMarquées == minesVoisines) //Si le nombre de voilées (augmenté de celles déjà marquées) correspond aux voisines, marquer les voilées voisines
 			{
 				voisinesFerméesNonMarquées.ToList().ForEach(c => c.Marque());
