@@ -30,11 +30,11 @@ public class Case
 	public static GetSetT<Vector2I> BaseSize { get; set; } = new(new(12, 12), setSize);
 	public static GetSetT<Vector2I> Size { get; set; } = new(BaseSize.Me);
 
-	public bool isHidden; //La case n'est pas dévoilée
-	public bool isMined; //La case n'est pas minée (elle peut le devenir)
-	public bool isMarked; //La case est marquée comme minée
-	public bool isQuestioned; //La case est décorée, mais sans que cela n'entre en compte
-	public int HasMineVoisines => Voisines.Count(c => c.isMined);
+	public bool estFermée; //La case n'est pas dévoilée
+	public bool estMinée; //La case n'est pas minée (elle peut le devenir)
+	public bool estMarquée; //La case est marquée comme minée
+	public bool estQuestionnée; //La case est décorée, mais sans que cela n'entre en compte
+	public int AMinesVoisines => Voisines.Count(c => c.estMinée);
 	public List<Case> Voisines { get; set; } = [];
 
 	public TextureButton? Image { get; set; }
@@ -52,86 +52,87 @@ public class Case
 	//    Image = imgHidden, //apparence
 	//    SizeMode = PictureBoxSizeMode.Zoom
 	//};
-	private Case? save;
+	private Case? sauve;
 
 	private Case()
 	{ }
-	public Case(Vector2I xy, bool _isMined = false, bool _isHidden = true, bool _isMarked = false, bool _isQuestion = false)
+	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _isMarquée = false, bool _estQuestionnée = false)
 	{
 		populationId = population++;
-		isHidden = _isHidden;
-		isMarked = _isMarked;
-		isMined = _isMined;
-		isQuestioned = _isQuestion;
-		Image = Plateau.AddCase?.Invoke(Size.Me * xy);
-		if (Image is not null && Plateau.CaseClick is not null)
-			Image.GuiInput += Plateau.CaseClick(this);
+		estFermée = _estFermée;
+		estMarquée = _isMarquée;
+		estMinée = _estMinée;
+		estQuestionnée = _estQuestionnée;
+		Image = Plateau.AjouterCase?.Invoke(Size.Me * xy);
+		if (Image is not null && Plateau.CliquerCase is not null)
+			Image.GuiInput += Plateau.CliquerCase(this);
 	}
 
-	public void Reveal()
+	public void Révèle()
 	{
-		isHidden = false;
-		isMarked = false;
-		isQuestioned = false;
-		Refresh();
+		estFermée = false;
+		estMarquée = false;
+		estQuestionnée = false;
+		Rafraîchit();
 	}
 
 	public void Marque()
 	{
-		isMarked = true;
-		isQuestioned = false;
-		Refresh();
+		estMarquée = true;
+		estQuestionnée = false;
+		Rafraîchit();
 	}
 
 	public void Questionne()
 	{
-		isMarked = false;
-		isQuestioned = true;
-		Refresh();
+		estMarquée = false;
+		estQuestionnée = true;
+		Rafraîchit();
 	}
 
-	public void Demarque()
+	public void Démarque()
 	{
-		isMarked = false;
-		isQuestioned = false;
-		Refresh();
+		estMarquée = false;
+		estQuestionnée = false;
+		Rafraîchit();
 	}
 
-	public void Restore()
+	public void Restaure() => Restaure(sauve);
+	public void Restaure(Case? cible)
 	{
-		if (save is null) return;
-		isHidden = save.isHidden;
-		isMined = save.isMined;
-		isMarked = save.isMarked;
-		isQuestioned = save.isQuestioned;
-		Image = save.Image;
-		Refresh();
+		if (cible is null) return;
+		estFermée = cible.estFermée;
+		estMinée = cible.estMinée;
+		estMarquée = cible.estMarquée;
+		estQuestionnée = cible.estQuestionnée;
+		Image = cible.Image;
+		Rafraîchit();
 	}
 
-	public void Save()
+	public void Sauve()
 	{
-		save = new()
+		sauve = new()
 		{
-			isHidden = isHidden,
-			isMined = isMined,
-			isMarked = isMarked,
-			isQuestioned = isQuestioned,
+			estFermée = estFermée,
+			estMinée = estMinée,
+			estMarquée = estMarquée,
+			estQuestionnée = estQuestionnée,
 			Image = Image
 		};
 	}
 
-	public void Refresh()
+	public void Rafraîchit()
 	{
-		Plateau.SetTexture?.Invoke(this);
+		Plateau.MettreTexture?.Invoke(this);
 	}
 
 	internal void Démine()
 	{
-		isMined = false;
-		isMarked = false;
-		isHidden = false;
-		isQuestioned = false;
-		Refresh();
-		Voisines.ForEach(c => c.Refresh());
+		estMinée = false;
+		estMarquée = false;
+		estFermée = false;
+		estQuestionnée = false;
+		Rafraîchit();
+		Voisines.ForEach(c => c.Rafraîchit());
 	}
 }

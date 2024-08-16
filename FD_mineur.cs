@@ -228,13 +228,13 @@ public partial class FD_mineur : Control
 
 	public FD_mineur() : base()
 	{
-		Plateau.SetGameOver = (gameOver) =>
+		Plateau.MettreGameOver = (gameOver) =>
 		{
 			elapsedTime = 0;
 			isGameOver = gameOver;
 			TsslGameOver?.SetVisible(isGameOver);
 		};
-		Plateau.UpdateMines = (int min, int marques, int max) =>
+		Plateau.RafraîchirMines = (int min, int marques, int max) =>
 		{
 			TsslReste?.SetText((max - marques - min).ToString());
 			TsslTotal?.SetText(max.ToString());
@@ -242,7 +242,7 @@ public partial class FD_mineur : Control
 			ProgressBar?.SetValue(marques);
 			ProgressBar?.SetMax(max);
 		};
-		Plateau.AddCase = (Vector2I xy) =>
+		Plateau.AjouterCase = (Vector2I xy) =>
 		{
 			var bouton = new TextureButton
 			{
@@ -254,16 +254,16 @@ public partial class FD_mineur : Control
 			AddChild(bouton);
 			return bouton;
 		};
-		Plateau.SetTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.isHidden
-			? @case.isMarked
+		Plateau.MettreTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.estFermée
+			? @case.estMarquée
 				? ETexture.Marquee
-				: @case.isQuestioned
+				: @case.estQuestionnée
 					? ETexture.Question
 					: ETexture.Fermee
-			: @case.isMined
+			: @case.estMinée
 				? ETexture.Minee
-				: (ETexture)@case.HasMineVoisines]);
-		Plateau.CaseClick = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
+				: (ETexture)@case.AMinesVoisines]);
+		Plateau.CliquerCase = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
 	}
 
 	// Called when the node enters the scene tree for the first time.
