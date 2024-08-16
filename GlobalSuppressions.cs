@@ -8,3 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Major Bug", "S3903:Types should be defined in named namespaces")]
 [assembly: SuppressMessage("Design", "CA1050:Déclarer les types dans des espaces de noms")]
 [assembly: SuppressMessage("Minor Code Smell", "S1104:Fields should not have public accessibility")]
+[assembly: SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "Non.")]

@@ -223,7 +223,6 @@ public partial class FD_mineur : Control
 	[Export]
 	public ETexture TestEtexture;
 
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "<En attente>")]
 	public FD_mineur() : base()
 	{
 		Plateau.SetGameOver = (gameOver) =>
