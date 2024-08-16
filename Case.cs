@@ -57,11 +57,11 @@ public class Case
 
 	private Case()
 	{ }
-	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _isMarquée = false, bool _estQuestionnée = false)
+	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _estMarquée = false, bool _estQuestionnée = false)
 	{
 		populationId = population++;
 		estFermée = _estFermée;
-		estMarquée = _isMarquée;
+		estMarquée = _estMarquée;
 		estMinée = _estMinée;
 		estQuestionnée = _estQuestionnée;
 		Image = Plateau.AjouterCase?.Invoke(Taille.Moi * xy);
