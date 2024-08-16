@@ -76,6 +76,9 @@ public partial class FD_mineur : Control
 	public int seed = 1337;
 
 	[Export]
+	public bool boucle = false;
+
+	[Export]
 	public Dictionary<ETexture, Dictionary<Textures, Resource?>> ImagesArray { get; set; } = new()
 	{
 		{ ETexture.Minee, new()
@@ -280,7 +283,7 @@ public partial class FD_mineur : Control
 
 		window.GuiSnapControlsToPixels = true;
 
-		Plateau.InitialisePlateau(taillePlateau, mines, isSeeded ? seed : null, gameOver: isGameOver);
+		Plateau.InitialisePlateau(taillePlateau, mines, seed: isSeeded ? seed : null, boucle: boucle, gameOver: isGameOver);
 		Vector2I caseSize = Case.Size.Me;
 		Vector2I plateauSize = Plateau.Size.Me;
 		window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));

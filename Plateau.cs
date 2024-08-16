@@ -31,7 +31,7 @@ public static class Plateau
 	{ get => minesMin; set { minesMin = value; UpdateMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(Vector2I size, int mines = 0, int? seed = 1337, bool gameOver = false) //50, 50, 250
+	public static void InitialisePlateau(Vector2I size, int mines = 0, int? seed = 1337, bool boucle = false, bool gameOver = false) //50, 50, 250
 	{
 		int mining = 0;
 		Random rand = seed is null ? new() : new(seed.Value);
@@ -39,22 +39,36 @@ public static class Plateau
 
 		//Initialisation de la liste des cases du plateau
 		LPlateau = new Case[iMax];
+		int xMax = size.X;
+		int yMax = iMax - xMax;
 		for (int i = 0; i < iMax; i++)
 		{
-			int i_x = i % size.X;
-			int i_y = i / size.X;
+			int i_x = i % xMax;
+			int i_y = i / xMax;
 			LPlateau[i] = new(new(i_x, i_y), (rand.Next(iMax - i) < mines - mining) && mining == mining++); //Référencement de la case
-
-			if (i >= size.X) //étage 1+
+			List<Case> voisines = [];
+			if (i >= xMax) //étage 1+
 			{
-				if (i_x > 0) LPlateau[i].Voisines.Add(LPlateau[i - 1 - size.X]); //haut gauche
-				LPlateau[i].Voisines.Add(LPlateau[i - size.X]); //haut centre
-				if (i_x < size.X - 1) LPlateau[i].Voisines.Add(LPlateau[i + 1 - size.X]); //droite
+				if (i_x > 0) voisines.Add(LPlateau[i - 1 - xMax]); //haut gauche
+				else if (boucle && i_x == 0) voisines.Add(LPlateau[i - 1 - xMax + xMax]); //(boucle haut droite) [OK]
+				voisines.Add(LPlateau[i - xMax]); //haut centre
+				if (i_x + 1 < xMax) voisines.Add(LPlateau[i + 1 - xMax]); //haut droite
+				else if (boucle && i_x + 1 == xMax) voisines.Add(LPlateau[i + 1 - xMax - xMax]); //(boucle haut gauche) [OK]
 			}
 
-			if (i_x > 0) LPlateau[i].Voisines.Add(LPlateau[i - 1]); //gauche
+			if (i_x > 0) voisines.Add(LPlateau[i - 1]); //gauche
+			if (boucle && i_x + 1 == xMax) voisines.Add((LPlateau[i + 1 - xMax])); //boucle gauche
 
-			LPlateau[i].Voisines.ForEach(c => c.Voisines.Add(LPlateau[i]));
+			if (boucle && i >= yMax) //dernier étage
+			{
+				if (i_x > 0) voisines.Add(LPlateau[i - 1 - yMax]); //boucle bas gauche
+				else if (i_x == 0) voisines.Add(LPlateau[i - 1 - yMax + xMax]); //boucle haut droite
+				voisines.Add(LPlateau[i - yMax]); //boucle bas
+				if (i_x + 1 < xMax) voisines.Add(LPlateau[i + 1 - yMax]); //boucle bas droite
+				else if (i_x + 1 == xMax) voisines.Add(LPlateau[i + 1 - yMax - xMax]); //boucle haut gauche
+			}
+			voisines.ForEach(c => c.Voisines.Add(LPlateau[i]));
+			LPlateau[i].Voisines.AddRange(voisines);
 			LPlateau[i].Save();
 		}
 
