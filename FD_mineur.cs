@@ -268,7 +268,7 @@ public partial class FD_mineur : Control
 	public override void _Ready()
 	{
 		//if (TsslGameOver != null) TsslGameOver.GuiInput += @event => { Console.WriteLine("bla."); Plateau.RestaurePlateau(); };
-		if (HBoxContainer != null) HBoxContainer!.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.RestaurePlateau(); elapsedTime = 0; } };
+		if (HBoxContainer != null) HBoxContainer.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.RestaurePlateau(); elapsedTime = 0; } };
 		//DisplayServer.ScreenGetSize;//
 		//DisplayServer.ScreenGetScale;//Linux+Mac seulement. :(
 		//DisplayServer.WindowGetSize;//
