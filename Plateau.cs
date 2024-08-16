@@ -8,7 +8,7 @@ public static class Plateau
 {
 	public static int Surface(this Vector2I vector) => vector.X * vector.Y;
 
-	public static GetSetT<Vector2I> Size { get; private set; } = new(new(1, 1));
+	public static GetSetT<Vector2I> Taille { get; private set; } = new(new(1, 1));
 	private static Case[] lPlateau = [];
 	private static int minesMax = 0;
 	private static int minesMarquees = 0;
@@ -72,7 +72,7 @@ public static class Plateau
 			LPlateau[i].Sauve();
 		}
 
-		Size.Me = size;
+		Taille.Moi = size;
 		MinesMax = mines;
 		MettreGameOver?.Invoke(gameOver);
 	}
@@ -81,7 +81,7 @@ public static class Plateau
 	{
 		int mining = 0;
 		Random rand = new(/*seed*/);
-		int iMax = Size.Me.X * Size.Me.Y;
+		int iMax = Taille.Moi.X * Taille.Moi.Y;
 
 		for (int i = 0; i < iMax; i++)
 		{
@@ -163,7 +163,7 @@ public static class Plateau
 		if (@case.estFermée && !@case.estMarquée)
 		{
 			@case.Révèle();
-			if (@case.estMinée) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la mine incorrectement dévoilées
+			if (@case.estMinée) //[WIP] Ajouter un fond rouge sur les cases marquées incorrectement, ainsi que sur la mine incorrectement dévoilée
 			{
 				LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle());
 				MettreGameOver?.Invoke(true);

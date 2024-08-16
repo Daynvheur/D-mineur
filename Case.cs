@@ -15,9 +15,9 @@ using System.Linq;
 //    }
 //}
 
-public class GetSetT<T>(T _value, Action? _action = null)
+public class GetSetT<T>(T _valeur, Action? _action = null)
 {
-	public T Me { get => _value; set { _value = value; _action?.Invoke(); } }
+	public T Moi { get => _valeur; set { _valeur = value; _action?.Invoke(); } }
 }
 
 public class Case
@@ -25,10 +25,10 @@ public class Case
 	private static int population = 0; //Déclaration d'existence dans la population
 	public int populationId;
 
-	private static readonly Action? setSize = static () => Size!.Me = (Vector2I)((Vector2)BaseSize!.Me * Zoom!.Me);
-	public static GetSetT<float> Zoom { get; set; } = new (1, setSize);
-	public static GetSetT<Vector2I> BaseSize { get; set; } = new(new(12, 12), setSize);
-	public static GetSetT<Vector2I> Size { get; set; } = new(BaseSize.Me);
+	private static readonly Action? MettreTaille = static () => Taille!.Moi = (Vector2I)((Vector2)TailleBase!.Moi * Zoom!.Moi);
+	public static GetSetT<float> Zoom { get; set; } = new (1, MettreTaille);
+	public static GetSetT<Vector2I> TailleBase { get; set; } = new(new(12, 12), MettreTaille);
+	public static GetSetT<Vector2I> Taille { get; set; } = new(TailleBase.Moi);
 
 	public bool estFermée; //La case n'est pas dévoilée
 	public bool estMinée; //La case n'est pas minée (elle peut le devenir)
@@ -63,7 +63,7 @@ public class Case
 		estMarquée = _isMarquée;
 		estMinée = _estMinée;
 		estQuestionnée = _estQuestionnée;
-		Image = Plateau.AjouterCase?.Invoke(Size.Me * xy);
+		Image = Plateau.AjouterCase?.Invoke(Taille.Moi * xy);
 		if (Image is not null && Plateau.CliquerCase is not null)
 			Image.GuiInput += Plateau.CliquerCase(this);
 	}

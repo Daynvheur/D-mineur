@@ -247,7 +247,7 @@ public partial class FD_mineur : Control
 			var bouton = new TextureButton
 			{
 				Position = xy,
-				Size = Case.Size.Me,
+				Size = Case.Taille.Moi,
 				StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered,
 			};
 			SetTextures(bouton, ImagesArray[ETexture.Fermee]);
@@ -278,14 +278,14 @@ public partial class FD_mineur : Control
 		//GetWindow().CurrentScreen.;//
 		//GetWindow().;//
 		Window window = GetWindow();
-		Case.Zoom.Me = 2.5f;
-		Case.BaseSize.Me = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
+		Case.Zoom.Moi = 2.5f;
+		Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
 
 		window.GuiSnapControlsToPixels = true;
 
 		Plateau.InitialisePlateau(taillePlateau, mines, seed: isSeeded ? seed : null, boucle: boucle, gameOver: isGameOver);
-		Vector2I caseSize = Case.Size.Me;
-		Vector2I plateauSize = Plateau.Size.Me;
+		Vector2I caseSize = Case.Taille.Moi;
+		Vector2I plateauSize = Plateau.Taille.Moi;
 		window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
 		window.MoveToCenter();
 		Timer?.Start();
