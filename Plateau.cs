@@ -220,7 +220,18 @@ public static class Plateau
 
 	public static void Interaction2(Case @case)
 	{
-		if (!@case.estFermée) return;
+		if (!@case.estFermée)
+		{
+			if (!@case.AMinesVoisines)
+			{
+				var ouvertesIncomplètes = LPlateau.Where(c => !c.estFermée && c.AMinesVoisines && c.Voisines.Count(_c => _c.estFermée) == c.NbMinesVoisines).ToLookup(c => c.Voisines.Any(_c => _c.estFermée && !_c.estMarquée)); //Toutes les cases ouvertes, incomplètes ou complètes
+				if (ouvertesIncomplètes[true].Any())
+					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque()));
+				else
+					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine()));
+
+			}
+		}
 
 		if (@case.estMarquée)
 			@case.Questionne();
