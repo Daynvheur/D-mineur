@@ -1,0 +1,235 @@
+[gd_scene load_steps=33 format=3 uid="uid://by77yw448pnwb"]
+
+[ext_resource type="Script" path="res://CDmineur.cs" id="1_egfmi"]
+[ext_resource type="Texture2D" uid="uid://wakoirbfgiul" path="res://Images/m.png" id="2_t5ite"]
+[ext_resource type="Texture2D" uid="uid://b32ofuuqhnaph" path="res://Images/mHover.png" id="3_1ijd6"]
+[ext_resource type="Texture2D" uid="uid://cb0e3pwqjofua" path="res://Images/q.png" id="4_8cptw"]
+[ext_resource type="Texture2D" uid="uid://dhplfki843sap" path="res://Images/qHover.png" id="5_oifhk"]
+[ext_resource type="Texture2D" uid="uid://7krab2h53b4" path="res://Images/d.png" id="6_n05x5"]
+[ext_resource type="Texture2D" uid="uid://ca50tic7k828t" path="res://Images/dHover.png" id="7_kts8r"]
+[ext_resource type="Texture2D" uid="uid://cdqbhrq2tglnq" path="res://Images/_.png" id="8_lx8gq"]
+[ext_resource type="Texture2D" uid="uid://djxdqcxigjd73" path="res://Images/_Press.png" id="9_wwyim"]
+[ext_resource type="Texture2D" uid="uid://c3j66umdtc7w0" path="res://Images/_Hover.png" id="10_vmkrh"]
+[ext_resource type="Texture2D" uid="uid://4laq8li8p1s1" path="res://Images/_Focus.png" id="11_wpn2n"]
+[ext_resource type="Texture2D" uid="uid://cilgrlsoksgdn" path="res://Images/0.png" id="12_slqg8"]
+[ext_resource type="Texture2D" uid="uid://cagyfbsh06la4" path="res://Images/0Press.png" id="13_qagfb"]
+[ext_resource type="Texture2D" uid="uid://bo6aq0muupl66" path="res://Images/0Hover.png" id="14_6grqj"]
+[ext_resource type="Texture2D" uid="uid://daeid3bpdtjs1" path="res://Images/0Focus.png" id="15_pugwd"]
+[ext_resource type="Texture2D" uid="uid://1citckjppaoq" path="res://Images/1.png" id="16_gpthl"]
+[ext_resource type="Texture2D" uid="uid://6fhw3nduwsck" path="res://Images/1Hover.png" id="17_74gs4"]
+[ext_resource type="Texture2D" uid="uid://br7nv0hh4hrbw" path="res://Images/2.png" id="18_7kc6a"]
+[ext_resource type="Texture2D" uid="uid://c3fqlf1460ww6" path="res://Images/2Hover.png" id="19_p0ae2"]
+[ext_resource type="Texture2D" uid="uid://biayqdlq8kqfo" path="res://Images/3.png" id="20_q5t7q"]
+[ext_resource type="Texture2D" uid="uid://b2ukwge015eo6" path="res://Images/3Hover.png" id="21_sgx8k"]
+[ext_resource type="Texture2D" uid="uid://osle5r8aso8l" path="res://Images/4.png" id="22_t8nu3"]
+[ext_resource type="Texture2D" uid="uid://bovhmocrmbc7p" path="res://Images/4Hover.png" id="23_v0ipo"]
+[ext_resource type="Texture2D" uid="uid://dtgf0g0d3t144" path="res://Images/5.png" id="24_64eud"]
+[ext_resource type="Texture2D" uid="uid://kufqjchu0u5l" path="res://Images/5Hover.png" id="25_qs0bc"]
+[ext_resource type="Texture2D" uid="uid://pdupl21vwqco" path="res://Images/6.png" id="26_u0q2m"]
+[ext_resource type="Texture2D" uid="uid://bevr6dmko8puq" path="res://Images/6Hover.png" id="27_l1mwn"]
+[ext_resource type="Texture2D" uid="uid://chf423s7lraer" path="res://Images/7.png" id="28_vnj7p"]
+[ext_resource type="Texture2D" uid="uid://b1podcenlto3l" path="res://Images/7Hover.png" id="29_rsudg"]
+[ext_resource type="Texture2D" uid="uid://bpahpjr3wpxw0" path="res://Images/8.png" id="30_yrkqr"]
+[ext_resource type="Texture2D" uid="uid://oan7f47fk26u" path="res://Images/8Hover.png" id="31_s83on"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ynqr"]
+
+[node name="CDmineur" type="VBoxContainer" node_paths=PackedStringArray("ControlMine", "HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_egfmi")
+ControlMine = NodePath("ScrollContainer/Control")
+HBoxContainer = NodePath("PanelContainer/HBoxContainer")
+TsslReste = NodePath("PanelContainer/HBoxContainer/TsslReste")
+TsslTotal = NodePath("PanelContainer/HBoxContainer/TsslTotal")
+ProgressBar = NodePath("PanelContainer/HBoxContainer/ProgressBar")
+TsslGameOver = NodePath("PanelContainer/HBoxContainer/TsslGameOver")
+TsslTemps = NodePath("PanelContainer/HBoxContainer/TsslTemps")
+Timer = NodePath("Timer")
+taillePlateau = Vector2i(32, 32)
+mines = 128
+isSeeded = true
+boucle = true
+ImagesArray = {
+-5: {
+0: ExtResource("2_t5ite"),
+1: null,
+2: ExtResource("3_1ijd6"),
+3: null,
+4: null,
+5: null
+},
+-4: {
+0: ExtResource("4_8cptw"),
+1: null,
+2: ExtResource("5_oifhk"),
+3: null,
+4: null,
+5: null
+},
+-3: {
+0: ExtResource("6_n05x5"),
+1: null,
+2: ExtResource("7_kts8r"),
+3: null,
+4: null,
+5: null
+},
+-2: {
+0: ExtResource("8_lx8gq"),
+1: ExtResource("9_wwyim"),
+2: ExtResource("10_vmkrh"),
+3: null,
+4: ExtResource("11_wpn2n"),
+5: null
+},
+-1: {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null,
+5: null
+},
+0: {
+0: ExtResource("12_slqg8"),
+1: ExtResource("13_qagfb"),
+2: ExtResource("14_6grqj"),
+3: null,
+4: ExtResource("15_pugwd"),
+5: null
+},
+1: {
+0: ExtResource("16_gpthl"),
+1: null,
+2: ExtResource("17_74gs4"),
+3: null,
+4: null,
+5: null
+},
+2: {
+0: ExtResource("18_7kc6a"),
+1: null,
+2: ExtResource("19_p0ae2"),
+3: null,
+4: null,
+5: null
+},
+3: {
+0: ExtResource("20_q5t7q"),
+1: null,
+2: ExtResource("21_sgx8k"),
+3: null,
+4: null,
+5: null
+},
+4: {
+0: ExtResource("22_t8nu3"),
+1: null,
+2: ExtResource("23_v0ipo"),
+3: null,
+4: null,
+5: null
+},
+5: {
+0: ExtResource("24_64eud"),
+1: null,
+2: ExtResource("25_qs0bc"),
+3: null,
+4: null,
+5: null
+},
+6: {
+0: ExtResource("26_u0q2m"),
+1: null,
+2: ExtResource("27_l1mwn"),
+3: null,
+4: null,
+5: null
+},
+7: {
+0: ExtResource("28_vnj7p"),
+1: null,
+2: ExtResource("29_rsudg"),
+3: null,
+4: null,
+5: null
+},
+8: {
+0: ExtResource("30_yrkqr"),
+1: null,
+2: ExtResource("31_s83on"),
+3: null,
+4: null,
+5: null
+}
+}
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="ScrollContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_6ynqr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_direction = 2
+layout_mode = 2
+
+[node name="TsslMines" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "Mines restantes : 
+"
+max_lines_visible = 1
+
+[node name="TsslReste" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "56"
+max_lines_visible = 1
+
+[node name="TsslSep" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "/
+"
+max_lines_visible = 1
+
+[node name="TsslTotal" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "200
+"
+max_lines_visible = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(117, 18)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+max_value = 200.0
+step = 1.0
+value = 144.0
+allow_greater = true
+
+[node name="TsslGameOver" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
+text = "GameOver !"
+max_lines_visible = 1
+
+[node name="TsslTemps" type="Label" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "(Temps écoulé)"
+max_lines_visible = 1

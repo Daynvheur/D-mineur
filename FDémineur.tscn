@@ -1,12 +1,10 @@
 [gd_scene load_steps=32 format=3 uid="uid://br32jtvcb04mx"]
 
 [ext_resource type="Script" path="res://FD_mineur.cs" id="1_0ccyq"]
-[ext_resource type="Texture2D" uid="uid://b32ofuuqhnaph" path="res://Images/mHover.png" id="3_2dn6i"]
 [ext_resource type="Texture2D" uid="uid://cb0e3pwqjofua" path="res://Images/q.png" id="3_anw1j"]
 [ext_resource type="Texture2D" uid="uid://b32ofuuqhnaph" path="res://Images/mHover.png" id="3_s0af1"]
 [ext_resource type="Texture2D" uid="uid://cdqbhrq2tglnq" path="res://Images/_.png" id="4_n2ou2"]
 [ext_resource type="Texture2D" uid="uid://7krab2h53b4" path="res://Images/d.png" id="4_vl0wn"]
-[ext_resource type="Texture2D" uid="uid://dhplfki843sap" path="res://Images/qHover.png" id="5_7ll6i"]
 [ext_resource type="Texture2D" uid="uid://wakoirbfgiul" path="res://Images/m.png" id="5_dgtwe"]
 [ext_resource type="Texture2D" uid="uid://dhplfki843sap" path="res://Images/qHover.png" id="5_pq28j"]
 [ext_resource type="Texture2D" uid="uid://djxdqcxigjd73" path="res://Images/_Press.png" id="6_62uc2"]
@@ -16,7 +14,6 @@
 [ext_resource type="Texture2D" uid="uid://1citckjppaoq" path="res://Images/1.png" id="8_1tclq"]
 [ext_resource type="Texture2D" uid="uid://4laq8li8p1s1" path="res://Images/_Focus.png" id="8_ns7f4"]
 [ext_resource type="Texture2D" uid="uid://br7nv0hh4hrbw" path="res://Images/2.png" id="9_d6uks"]
-[ext_resource type="Texture2D" uid="uid://cagyfbsh06la4" path="res://Images/0Press.png" id="10_5tq4q"]
 [ext_resource type="Texture2D" uid="uid://biayqdlq8kqfo" path="res://Images/3.png" id="10_6w7kf"]
 [ext_resource type="Texture2D" uid="uid://osle5r8aso8l" path="res://Images/4.png" id="11_uu66d"]
 [ext_resource type="Texture2D" uid="uid://cagyfbsh06la4" path="res://Images/0Press.png" id="13_3p1vp"]
@@ -43,13 +40,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0ccyq")
-HBoxContainer = NodePath("HBoxContainer")
-TsslReste = NodePath("HBoxContainer/TsslReste")
-TsslTotal = NodePath("HBoxContainer/TsslTotal")
-ProgressBar = NodePath("HBoxContainer/ProgressBar")
-TsslGameOver = NodePath("HBoxContainer/TsslGameOver")
-TsslTemps = NodePath("HBoxContainer/TsslTemps")
-Timer = NodePath("Timer")
 taillePlateau = Vector2i(25, 25)
 mines = 63
 isSeeded = true
@@ -167,45 +157,57 @@ ImagesArray = {
 5: null
 }
 }
+HBoxContainer = NodePath("VBoxContainer/HBoxContainer")
+TsslReste = NodePath("VBoxContainer/HBoxContainer/TsslReste")
+TsslTotal = NodePath("VBoxContainer/HBoxContainer/TsslTotal")
+ProgressBar = NodePath("VBoxContainer/HBoxContainer/ProgressBar")
+TsslGameOver = NodePath("VBoxContainer/HBoxContainer/TsslGameOver")
+TsslTemps = NodePath("VBoxContainer/HBoxContainer/TsslTemps")
+Timer = NodePath("Timer")
 
 [node name="Timer" type="Timer" parent="."]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_direction = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -27.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_direction = 2
+layout_mode = 2
 size_flags_vertical = 8
 
-[node name="TsslMines" type="Label" parent="HBoxContainer"]
+[node name="TsslMines" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Mines restantes : 
+text = "Mines restantes :
 "
 max_lines_visible = 1
 
-[node name="TsslReste" type="Label" parent="HBoxContainer"]
+[node name="TsslReste" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "56"
 max_lines_visible = 1
 
-[node name="TsslSep" type="Label" parent="HBoxContainer"]
+[node name="TsslSep" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "/
 "
 max_lines_visible = 1
 
-[node name="TsslTotal" type="Label" parent="HBoxContainer"]
+[node name="TsslTotal" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "200
 "
 max_lines_visible = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(117, 18)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -215,13 +217,13 @@ step = 1.0
 value = 144.0
 allow_greater = true
 
-[node name="TsslGameOver" type="Label" parent="HBoxContainer"]
+[node name="TsslGameOver" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
 text = "GameOver !"
 max_lines_visible = 1
 
-[node name="TsslTemps" type="Label" parent="HBoxContainer"]
+[node name="TsslTemps" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "(Temps écoulé)"
 max_lines_visible = 1

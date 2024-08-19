@@ -7,4 +7,16 @@
     <RootNamespace>Dmineur</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="FD_mineur.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Godot.SourceGenerators" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="GodotSharp" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="GodotSharpEditor" Version="4.3.0" />
+  </ItemGroup>
 </Project>

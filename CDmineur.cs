@@ -29,8 +29,11 @@ public enum Textures
 	ClickMask,
 }
 
-public partial class FD_mineur : Control
+public partial class CDmineur : VBoxContainer
 {
+	[Export]
+	public Control? ControlMine { get; set; }
+
 	[Export]
 	public bool isGameOver = false;
 
@@ -224,7 +227,7 @@ public partial class FD_mineur : Control
 	[Export]
 	public ETexture TestEtexture;
 
-	public FD_mineur() : base()
+	public CDmineur() : base()
 	{
 		Plateau.MettreGameOver = (gameOver) =>
 		{
@@ -249,7 +252,7 @@ public partial class FD_mineur : Control
 				StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered,
 			};
 			SetTextures(bouton, ImagesArray[ETexture.Fermee]);
-			AddChild(bouton);
+			ControlMine?.AddChild(bouton);
 			return bouton;
 		};
 		Plateau.MettreTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.estRatée
@@ -286,7 +289,8 @@ public partial class FD_mineur : Control
 		Plateau.InitialisePlateau(taillePlateau, mines, seed: isSeeded ? seed : null, boucle: boucle, gameOver: isGameOver);
 		Vector2I caseSize = Case.Taille.Moi;
 		Vector2I plateauSize = Plateau.Taille.Moi;
-		window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		if (ControlMine != null) ControlMine.CustomMinimumSize = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y));// + (int)(HBoxContainer?.Size.Y ?? 0));
+																															   //window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
 		window.MoveToCenter();
 		Timer?.Start();
 	}
