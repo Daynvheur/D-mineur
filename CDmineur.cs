@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System;
 
 public enum ETexture
 {
@@ -78,6 +79,9 @@ public partial class CDmineur : VBoxContainer
 
 	[Export]
 	public bool boucle = false;
+
+	[Export]
+	public float zoom = 1.0f;
 
 	[Export]
 	public Dictionary<ETexture, Dictionary<Textures, Resource?>> ImagesArray { get; set; } = new()
@@ -281,7 +285,7 @@ public partial class CDmineur : VBoxContainer
 		//GetWindow().CurrentScreen.;//
 		//GetWindow().;//
 		Window window = GetWindow();
-		Case.Zoom.Moi = 2.5f;
+		Case.Zoom.Moi = zoom;
 		Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
 
 		window.GuiSnapControlsToPixels = true;
