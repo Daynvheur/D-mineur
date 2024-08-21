@@ -1,6 +1,7 @@
 [gd_scene load_steps=33 format=3 uid="uid://by77yw448pnwb"]
 
 [ext_resource type="Script" path="res://CDmineur.cs" id="1_egfmi"]
+[ext_resource type="Theme" uid="uid://djr55wnt37rem" path="res://Theme.tres" id="1_prhr1"]
 [ext_resource type="Texture2D" uid="uid://wakoirbfgiul" path="res://Images/m.png" id="2_t5ite"]
 [ext_resource type="Texture2D" uid="uid://b32ofuuqhnaph" path="res://Images/mHover.png" id="3_1ijd6"]
 [ext_resource type="Texture2D" uid="uid://cb0e3pwqjofua" path="res://Images/q.png" id="4_8cptw"]
@@ -32,27 +33,27 @@
 [ext_resource type="Texture2D" uid="uid://bpahpjr3wpxw0" path="res://Images/8.png" id="30_yrkqr"]
 [ext_resource type="Texture2D" uid="uid://oan7f47fk26u" path="res://Images/8Hover.png" id="31_s83on"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ynqr"]
-
 [node name="CDmineur" type="VBoxContainer" node_paths=PackedStringArray("ControlMine", "HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_prhr1")
 script = ExtResource("1_egfmi")
-ControlMine = NodePath("ScrollContainer/Control")
-HBoxContainer = NodePath("PanelContainer/HBoxContainer")
-TsslReste = NodePath("PanelContainer/HBoxContainer/TsslReste")
-TsslTotal = NodePath("PanelContainer/HBoxContainer/TsslTotal")
-ProgressBar = NodePath("PanelContainer/HBoxContainer/ProgressBar")
-TsslGameOver = NodePath("PanelContainer/HBoxContainer/TsslGameOver")
-TsslTemps = NodePath("PanelContainer/HBoxContainer/TsslTemps")
+ControlMine = NodePath("ScrollContainer/Panel")
+HBoxContainer = NodePath("HBoxContainer")
+TsslReste = NodePath("HBoxContainer/TsslReste")
+TsslTotal = NodePath("HBoxContainer/TsslTotal")
+ProgressBar = NodePath("HBoxContainer/ProgressBar")
+TsslGameOver = NodePath("HBoxContainer/TsslGameOver")
+TsslTemps = NodePath("HBoxContainer/TsslTemps")
 Timer = NodePath("Timer")
 taillePlateau = Vector2i(32, 32)
-mines = 128
+mines = 256
 isSeeded = true
 boucle = true
+zoom = 0.7
 ImagesArray = {
 -5: {
 0: ExtResource("2_t5ite"),
@@ -171,65 +172,70 @@ ImagesArray = {
 [node name="Timer" type="Timer" parent="."]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_prhr1")
+follow_focus = true
 
-[node name="Control" type="Control" parent="ScrollContainer"]
+[node name="Panel" type="Panel" parent="ScrollContainer"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_prhr1")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_6ynqr")
+size_flags_horizontal = 4
+theme = ExtResource("1_prhr1")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
-layout_direction = 2
+[node name="TsslMines" type="Label" parent="HBoxContainer"]
 layout_mode = 2
-
-[node name="TsslMines" type="Label" parent="PanelContainer/HBoxContainer"]
-layout_mode = 2
+theme = ExtResource("1_prhr1")
 text = "Mines restantes : 
 "
 max_lines_visible = 1
 
-[node name="TsslReste" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="TsslReste" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_prhr1")
 text = "56"
 max_lines_visible = 1
 
-[node name="TsslSep" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="TsslSep" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_prhr1")
 text = "/
 "
 max_lines_visible = 1
 
-[node name="TsslTotal" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="TsslTotal" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_prhr1")
 text = "200
 "
 max_lines_visible = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/HBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
 custom_minimum_size = Vector2(117, 18)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 1
+theme = ExtResource("1_prhr1")
 max_value = 200.0
 step = 1.0
 value = 144.0
 allow_greater = true
 
-[node name="TsslGameOver" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="TsslGameOver" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_prhr1")
 theme_override_colors/font_color = Color(0.498039, 0, 0, 1)
 text = "GameOver !"
 max_lines_visible = 1
 
-[node name="TsslTemps" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="TsslTemps" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_prhr1")
 text = "(Temps écoulé)"
 max_lines_visible = 1
