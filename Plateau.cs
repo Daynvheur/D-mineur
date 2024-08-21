@@ -3,49 +3,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1121:Assignments should not be made from within sub-expressions")]
-public static class Plateau
+public static class Vector2IHelper
 {
 	public static int Surface(this Vector2I vector) => vector.X * vector.Y;
+}
 
-	public static GetSetT<Vector2I> Taille { get; private set; } = new(new(1, 1));
-	private static Case[] lPlateau = [];
-	private static int minesMax = 0;
-	private static int minesMarquees = 0;
-	private static int minesMin = 0;
+public class Plateau
+{
 
-	public static Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
-	public static Func<Vector2I, TextureButton>? AjouterCase { get; set; }
-	public static Func<Case, Control.GuiInputEventHandler>? CliquerCase { get; set; }
-	public static Action<Case>? MettreTexture { get; set; }
-	public static Action<bool>? MettreGameOver { get; set; }
-	public static Action<int, int, int>? RafraîchirMines { get; set; }
+	public GetSetT<Vector2I> Taille { get; private set; } = new(new(1, 1));
+	private Case[] lPlateau = [];
+	private int minesMax = 0;
+	private int minesMarquees = 0;
+	private int minesMin = 0;
 
-	public static int MinesMax
+	public Case[] LPlateau { get => lPlateau; private set => lPlateau = value; }
+	public Func<Vector2I, TextureButton>? AjouterCase { get; set; }
+	public Func<Case, Control.GuiInputEventHandler>? CliquerCase { get; set; }
+	public Action<Case>? MettreTexture { get; set; }
+	public Action<bool>? MettreGameOver { get; set; }
+	public Action<int, int, int>? RafraîchirMines { get; set; }
+
+	public int MinesMax
 	{ get => minesMax; set { minesMax = value; RafraîchirMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
-	public static int MinesMarquees
+	public int MinesMarquees
 	{ get => minesMarquees; set { minesMarquees = value; RafraîchirMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
-	public static int MinesMin
+	public int MinesMin
 	{ get => minesMin; set { minesMin = value; RafraîchirMines?.Invoke(minesMin, minesMarquees, minesMax); } }
 
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Supprimer le paramètre inutilisé", Justification = "Oui.")]
-	public static void InitialisePlateau(Vector2I size, int mines = 0, int? seed = 1337, bool boucle = false, bool gameOver = false) //50, 50, 250
+	Plateau? sauve;
+
+	public void InitialisePlateau(Vector2I taillePlateau, int mines = 0, int? seed = 1337, bool boucle = false, bool gameOver = false) //50, 50, 250
 	{
 		int minées = 0;
 		Random rand = seed is null ? new() : new(seed.Value);
-		int iMax = size.Surface();
+		int iMax = taillePlateau.Surface();
 
 		//Initialisation de la liste des cases du plateau
 		LPlateau = new Case[iMax];
-		int xMax = size.X;
+		int xMax = taillePlateau.X;
 		int yMax = iMax - xMax;
 		for (int i = 0; i < iMax; i++)
 		{
 			int i_x = i % xMax;
 			int i_y = i / xMax;
-			LPlateau[i] = new(new(i_x, i_y), (rand.Next(iMax - i) < mines - minées) && minées == minées++); //Référencement de la case
+			LPlateau[i] = new(this, new(i_x, i_y), (rand.Next(iMax - i) < mines - minées) && minées == minées++); //Référencement de la case
 			List<Case> voisines = [];
 			if (i >= xMax) //étage 1+
 			{
@@ -72,13 +76,22 @@ public static class Plateau
 			LPlateau[i].Sauve();
 		}
 
-		Taille.Moi = size;
+		Taille.Moi = taillePlateau;
 		MinesMax = mines;
 		MettreGameOver?.Invoke(gameOver);
+
+		Sauve();
 	}
 
-	public static void RestaurePlateau()
+	public void Restaure() => Restaure(sauve);
+
+	private void Restaure(Plateau? cible)
 	{
+		if (cible is null) return;
+		MinesMax = cible.minesMax;
+		MinesMin = cible.minesMin;
+		MinesMarquees = cible.minesMarquees;
+
 		int mining = 0;
 		Random rand = new(/*seed*/);
 		int iMax = Taille.Moi.X * Taille.Moi.Y;
@@ -92,73 +105,17 @@ public static class Plateau
 		MettreGameOver?.Invoke(false);
 	}
 
-	public static void InteractionDispatcher(InputEvent @event, Case @case)
+	public void Sauve()
 	{
-		switch (@event)
+		sauve = new()
 		{
-			//case InputEventMouseMotion:
-			//case InputEventMagnifyGesture:
-			//case InputEventPanGesture:
-			//case InputEventScreenDrag:
-			//case InputEventScreenTouch:
-			//case InputEventJoypadButton:
-			//case InputEventJoypadMotion:
-			//case InputEventMidi:
-			//case InputEventShortcut:
-			//case InputEventAction:
-			//case InputEventMouseMotion mouseMove:
-			//	if (@case.Image?.GetRect().HasPoint(mouseMove.Position) == true)
-			//	{
-			//		Console.WriteLine($"I'm in {@case.populationId}.");
-			//	}
-			//	else
-			//	{
-			//		Console.WriteLine($"I'm out {@case.populationId}.");
-			//	}
-			//	break;
-
-			case InputEventMouseButton mouseInput:
-				Console.WriteLine($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-				//if (mouseInput.ButtonIndex != MouseButton.Left)
-				//{
-				//	Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
-				//}
-				//else
-				if (mouseInput.ButtonIndex == MouseButton.Left)
-				{
-					if (!mouseInput.Pressed)
-					{
-						if (@case.Image?.IsHovered() == true)
-						{
-							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-							Interaction1(@case);
-						}
-						//else
-						//	Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
-					}
-					//else
-					//	Console.WriteLine("Je suis pressé !");
-				}
-				else if (mouseInput.ButtonIndex == MouseButton.Right)
-				{
-					if (mouseInput.Pressed)
-						Interaction2(@case);
-					//else
-					//	Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
-				}
-				break;
-				//case InputEventKey keyEvent:
-				//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
-				//	Console.Write($"Je suis la case {@case.populationId} ! ");
-				//	break;
-
-				//default:
-				//	Console.WriteLine($"Je suis un événement {@event.GetType()}.");
-				//	break;
-		}
+			minesMax = MinesMax,
+			minesMin = MinesMin,
+			minesMarquees = MinesMarquees
+		};
 	}
 
-	public static void Interaction1(Case @case)
+	public void Interaction1(Case @case)
 	{
 		if (!@case.estFermée) //Si la case est OUVERTE
 		{
@@ -230,7 +187,7 @@ public static class Plateau
 		}
 	}
 
-	private static void FinTragique()
+	private void FinTragique()
 	{
 		LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Ouvre());
 		LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Ouvre(true));
@@ -238,7 +195,7 @@ public static class Plateau
 		MettreGameOver?.Invoke(true);
 	}
 
-	public static void Interaction2(Case @case)
+	public void Interaction2(Case @case)
 	{
 		if (!@case.estFermée) //Si la case est OUVERTE
 		{

@@ -9,3 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1050:Déclarer les types dans des espaces de noms")]
 [assembly: SuppressMessage("Minor Code Smell", "S1104:Fields should not have public accessibility")]
 [assembly: SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "Non.")]
+[assembly: SuppressMessage("Major Code Smell", "S1121:Assignments should not be made from within sub-expressions")]

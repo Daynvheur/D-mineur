@@ -266,14 +266,14 @@ public partial class CDmineur : VBoxContainer
 				: @case.estMinée
 					? ETexture.Minee
 					: (ETexture)@case.NbMinesVoisines]);
-		Plateau.CliquerCase = (@case) => (@event) => Plateau.InteractionDispatcher(@event, @case);
+		Plateau.CliquerCase = (@case) => (@event) => InteractionDispatcher(@event, @case);
 	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		//if (TsslGameOver != null) TsslGameOver.GuiInput += @event => { Console.WriteLine("bla."); Plateau.RestaurePlateau(); };
-		if (HBoxContainer != null) HBoxContainer.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.RestaurePlateau(); elapsedTime = 0; } };
+		if (HBoxContainer != null) HBoxContainer.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.Restaure(); elapsedTime = 0; } };
 		//DisplayServer.ScreenGetSize;//
 		//DisplayServer.ScreenGetScale;//Linux+Mac seulement. :(
 		//DisplayServer.WindowGetSize;//
@@ -303,6 +303,8 @@ public partial class CDmineur : VBoxContainer
 
 		TsslTemps?.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
 	}
+
+	private readonly Plateau Plateau = new();
 
 	private static void SetTextures(TextureButton? bouton, Dictionary<Textures, Resource?> images)
 	{
@@ -383,5 +385,71 @@ public partial class CDmineur : VBoxContainer
 		}
 
 		return (entier, reste);
+	}
+
+	private void InteractionDispatcher(InputEvent @event, Case @case)
+	{
+		switch (@event)
+		{
+			//case InputEventMouseMotion:
+			//case InputEventMagnifyGesture:
+			//case InputEventPanGesture:
+			//case InputEventScreenDrag:
+			//case InputEventScreenTouch:
+			//case InputEventJoypadButton:
+			//case InputEventJoypadMotion:
+			//case InputEventMidi:
+			//case InputEventShortcut:
+			//case InputEventAction:
+			//case InputEventMouseMotion mouseMove:
+			//	if (@case.Image?.GetRect().HasPoint(mouseMove.Position) == true)
+			//	{
+			//		Console.WriteLine($"I'm in {@case.populationId}.");
+			//	}
+			//	else
+			//	{
+			//		Console.WriteLine($"I'm out {@case.populationId}.");
+			//	}
+			//	break;
+
+			case InputEventMouseButton mouseInput:
+				Console.WriteLine($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				//if (mouseInput.ButtonIndex != MouseButton.Left)
+				//{
+				//	Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
+				//}
+				//else
+				if (mouseInput.ButtonIndex == MouseButton.Left)
+				{
+					if (!mouseInput.Pressed)
+					{
+						if (@case.Image?.IsHovered() == true)
+						{
+							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+							Plateau.Interaction1(@case);
+						}
+						//else
+						//	Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+					}
+					//else
+					//	Console.WriteLine("Je suis pressé !");
+				}
+				else if (mouseInput.ButtonIndex == MouseButton.Right)
+				{
+					if (mouseInput.Pressed)
+						Plateau.Interaction2(@case);
+					//else
+					//	Console.WriteLine($"Je suis un clic droit. Appuyé : {mouseInput.Pressed}.");
+				}
+				break;
+				//case InputEventKey keyEvent:
+				//	Console.WriteLine($"{{{nameof(keyEvent.GetKeyLabelWithModifiers)}:{keyEvent.GetKeyLabelWithModifiers()},{nameof(keyEvent.GetKeycodeWithModifiers)}:{keyEvent.GetKeycodeWithModifiers()},{nameof(keyEvent.Pressed)}:{keyEvent.Pressed}}}");
+				//	Console.Write($"Je suis la case {@case.populationId} ! ");
+				//	break;
+
+				//default:
+				//	Console.WriteLine($"Je suis un événement {@event.GetType()}.");
+				//	break;
+		}
 	}
 }

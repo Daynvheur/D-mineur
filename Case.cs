@@ -55,12 +55,17 @@ public class Case
 	//    Image = imgHidden, //apparence
 	//    SizeMode = PictureBoxSizeMode.Zoom
 	//};
+
+	private readonly Plateau Plateau;
+
 	private Case? sauve;
 
-	private Case()
-	{ }
+	private Case(Plateau plateau)
+	{
+		Plateau = plateau;
+	}
 
-	public Case(Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _estMarquée = false, bool _estQuestionnée = false, bool _estRatée = false)
+	public Case(Plateau _plateau, Vector2I xy, bool _estMinée = false, bool _estFermée = true, bool _estMarquée = false, bool _estQuestionnée = false, bool _estRatée = false)
 	{
 		populationId = population++;
 		estFermée = _estFermée;
@@ -68,9 +73,11 @@ public class Case
 		estMinée = _estMinée;
 		estQuestionnée = _estQuestionnée;
 		estRatée = _estRatée;
+		Plateau = _plateau;
 		Image = Plateau.AjouterCase?.Invoke(Taille.Moi * xy);
 		if (Image is not null && Plateau.CliquerCase is not null)
 			Image.GuiInput += Plateau.CliquerCase(this);
+		Sauve();
 	}
 
 	public void Ouvre(bool _estRatée = false)
@@ -115,6 +122,7 @@ public class Case
 	public void Restaure(Case? cible)
 	{
 		if (cible is null) return;
+		populationId = cible.populationId;
 		estFermée = cible.estFermée;
 		estMinée = cible.estMinée;
 		estMarquée = cible.estMarquée;
@@ -126,8 +134,9 @@ public class Case
 
 	public void Sauve()
 	{
-		sauve = new()
+		sauve = new(Plateau)
 		{
+			populationId = populationId,
 			estFermée = estFermée,
 			estMinée = estMinée,
 			estMarquée = estMarquée,
