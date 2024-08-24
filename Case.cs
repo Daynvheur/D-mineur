@@ -26,7 +26,7 @@ public class Case
 	private static int population = 0; //Déclaration d'existence dans la population
 	public int populationId;
 
-	private static readonly Action? MettreTaille = static () => Taille!.Moi = (Vector2I)((Vector2)TailleBase!.Moi * Zoom!.Moi);
+	private static readonly Action? MettreTaille = () => { Taille!.Moi = (Vector2I)((Vector2)TailleBase!.Moi * Zoom!.Moi); };
 	public static GetSetT<float> Zoom { get; set; } = new(1, MettreTaille);
 	public static GetSetT<Vector2I> TailleBase { get; set; } = new(new(12, 12), MettreTaille);
 	public static GetSetT<Vector2I> Taille { get; set; } = new(TailleBase.Moi);
@@ -36,10 +36,14 @@ public class Case
 	public bool estMarquée; //La case est marquée comme minée
 	public bool estQuestionnée; //La case est décorée, mais sans que cela n'entre en compte
 	public bool estRatée; //La case obtient un visuel spécifique
+	public bool EstOuverte => !estFermée;
 	public int NbMinesVoisines => Voisines.Count(c => c.estMinée);
+	public int NbFerméesVoisines => Voisines.Count(c => c.estFermée);
+	public int NbMarquéesVoisines => Voisines.Count(c => c.estMarquée);
 	public bool AMinesVoisines => Voisines.Any(c => c.estMinée);
 	public List<Case> Voisines { get; set; } = [];
-
+	public bool EstRepérée => estFermée && !estMarquée && Voisines.Any(c => c.EstFiable); // Doit être fermée et non-marquée, et contenir au-moins une voisine fiable
+	public bool EstFiable => EstOuverte && NbMinesVoisines is int nb && (nb == 0 || NbMarquéesVoisines == nb || NbFerméesVoisines == nb); // Doit être ouverte, sans mines voisines, ou toutes marquées, ou toutes fermées minées
 	public TextureButton? Image { get; set; }
 
 	//public Image Image { get => (Image)pictBox.Image.Clone(); set { pictBox.Image = value; } }
@@ -83,14 +87,19 @@ public class Case
 	public void Ouvre(bool _estRatée = false)
 	{
 		if (estFermée && estMarquée) Plateau.MinesMarquees--;
-		estFermée = false;
 		estMarquée = false;
-		estQuestionnée = false;
-		estRatée = _estRatée;
-		Rafraîchit();
+		Révèle(_estRatée);
 
 		if (AMinesVoisines) return; //S'il y a des mines dans le voisinage, s'arrêter là
 		Voisines.Where(c => c.estFermée && !c.estMarquée).ToList().ForEach(c => c.Ouvre());
+	}
+
+	public void Révèle(bool _estRatée)
+	{
+		estFermée = false;
+		estQuestionnée = false;
+		estRatée = _estRatée;
+		Rafraîchit();
 	}
 
 	public void Marque()

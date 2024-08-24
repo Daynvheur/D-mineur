@@ -288,14 +288,17 @@ public partial class CDmineur : VBoxContainer
 		Case.Zoom.Moi = zoom;
 		Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
 
-		window.GuiSnapControlsToPixels = true;
+		//window.GuiSnapControlsToPixels = true;
 
 		Plateau.InitialisePlateau(taillePlateau, mines, seed: isSeeded ? seed : null, boucle: boucle, gameOver: isGameOver);
 		Vector2I caseSize = Case.Taille.Moi;
 		Vector2I plateauSize = Plateau.Taille.Moi;
-		if (ControlMine != null) ControlMine.CustomMinimumSize = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y));// + (int)(HBoxContainer?.Size.Y ?? 0));
-																															   //window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
-		window.MoveToCenter();
+		if (ControlMine is not null) ControlMine.CustomMinimumSize = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y));// + (int)(HBoxContainer?.Size.Y ?? 0));
+		//Panel p = new();
+		//p.
+
+		//window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
+		//window.MoveToCenter();
 		Timer?.Start();
 	}
 
@@ -417,19 +420,29 @@ public partial class CDmineur : VBoxContainer
 			//	break;
 
 			case InputEventMouseButton mouseInput:
-				Console.WriteLine($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+				Console.WriteLine($"1Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
 				//if (mouseInput.ButtonIndex != MouseButton.Left)
 				//{
-				//	Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}");
+				Console.WriteLine($"Je suis le bouton {mouseInput.ButtonIndex}, et mon statut ctrlPressed est {mouseInput.CtrlPressed}");
 				//}
 				//else
-				if (mouseInput.ButtonIndex == MouseButton.Left)
+				if (mouseInput.ButtonIndex == MouseButton.WheelDown && mouseInput.CtrlPressed)
+				{
+					Case.Zoom.Moi -= 0.1f;
+					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
+				}
+				else if (mouseInput.ButtonIndex == MouseButton.WheelUp && mouseInput.CtrlPressed)
+				{
+					Case.Zoom.Moi += 0.1f;
+					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
+				}
+				else  if (mouseInput.ButtonIndex == MouseButton.Left)
 				{
 					if (!mouseInput.Pressed)
 					{
 						if (@case.Image?.IsHovered() == true)
 						{
-							Console.Write($"Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
+							Console.Write($"2Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
 							Plateau.Interaction1(@case);
 						}
 						//else

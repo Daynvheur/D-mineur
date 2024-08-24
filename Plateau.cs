@@ -123,10 +123,10 @@ public class Plateau
 			{
 				var ouvertesIncomplètes = LPlateau.Where(c => !c.estFermée && c.AMinesVoisines && c.Voisines.Count(_c => _c.estFermée) == c.NbMinesVoisines).ToLookup(c => c.Voisines.Any(_c => _c.estFermée && !_c.estMarquée)); //Toutes les cases ouvertes, incomplètes ou complètes
 				if (ouvertesIncomplètes[true].Any())
-					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque()));
+					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque())); // Liste des cases complètes à marquer
 				else
 				{
-					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine()));
+					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine())); // Liste des cases complètes marquées à déminer
 				}
 			}
 			else //S'il Y A des mines voisines
@@ -148,7 +148,7 @@ public class Plateau
 				{
 					if (voisinesFerméesNonMarquées.Any(c => c.estMinée)) //mais qu'au-moins un est faux, fin de partie
 					{
-						voisinesFerméesNonMarquées.Where(c => c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+						voisinesFerméesNonMarquées.Where(c => c.estMinée).ToList().ForEach(c => c.Révèle(false));
 						FinTragique();
 					}
 					else //sinon, ouverture des cases supplémentaires
@@ -167,7 +167,7 @@ public class Plateau
 		{
 			if (@case.estMinée)
 			{
-				@case.Ouvre(true);
+				@case.Révèle(true);
 				FinTragique();
 			}
 			else
@@ -189,8 +189,8 @@ public class Plateau
 
 	private void FinTragique()
 	{
-		LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Ouvre());
-		LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Ouvre(true));
+		LPlateau.Where(c => c.estFermée && c.estMinée).ToList().ForEach(c => c.Révèle(false));
+		LPlateau.Where(c => c.estMarquée && !c.estMinée).ToList().ForEach(c => c.Révèle(true));
 
 		MettreGameOver?.Invoke(true);
 	}
@@ -201,12 +201,15 @@ public class Plateau
 		{
 			if (!@case.AMinesVoisines) //Si PAS de mines voisines, marquer le plateau
 			{
+				var bla = LPlateau.Where(c => c.EstRepérée); // WIP_refonte marquages en masse
+
+
 				var ouvertesIncomplètes = LPlateau.Where(c => !c.estFermée && c.AMinesVoisines && c.Voisines.Count(_c => _c.estFermée) == c.NbMinesVoisines).ToLookup(c => c.Voisines.Any(_c => _c.estFermée && !_c.estMarquée)); //Toutes les cases ouvertes, incomplètes ou complètes
 				if (ouvertesIncomplètes[true].Any())
-					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque()));
+					ouvertesIncomplètes[true].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && !_c.estMarquée).ToList().ForEach(_c => _c.Marque())); // Liste des cases complètes à marquer
 				else
 				{
-					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine()));
+					ouvertesIncomplètes[false].ToList().ForEach(c => c.Voisines.Where(_c => _c.estFermée && _c.estMarquée).ToList().ForEach(_c => _c.Démine())); // Liste des cases complètes marquées à déminer
 
 					List<Case> plateauVoilées = LPlateau.Where(c => c.estFermée).ToList();
 					//Si toutes les cases restantes sont minées, les marquer
