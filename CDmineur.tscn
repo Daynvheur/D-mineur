@@ -49,8 +49,8 @@ ProgressBar = NodePath("HBoxContainer/ProgressBar")
 TsslGameOver = NodePath("HBoxContainer/TsslGameOver")
 TsslTemps = NodePath("HBoxContainer/TsslTemps")
 Timer = NodePath("Timer")
-taillePlateau = Vector2i(32, 32)
-mines = 256
+taillePlateau = Vector2i(30, 16)
+mines = 41
 isSeeded = true
 boucle = true
 zoom = 0.7
@@ -183,6 +183,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_prhr1")
+
+[node name="PanelCase" type="Panel" parent="ScrollContainer/Panel"]
+layout_mode = 0
+offset_right = 12.0
+offset_bottom = 12.0
+
+[node name="Panel" type="Panel" parent="ScrollContainer/Panel/PanelCase"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=4 uid="uid://djr55wnt37rem"]
+[gd_resource type="Theme" load_steps=16 format=4 uid="uid://djr55wnt37rem"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_8ykn7"]
 
@@ -1367,6 +1367,10 @@ cache/0/21/0/glyphs/78/texture_idx = 0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6aued"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lvl86"]
+bg_color = Color(0.101961, 0.101961, 0.101961, 0.6)
+anti_aliasing = false
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eutg6"]
 bg_color = Color(0.101961, 0.101961, 0.101961, 0.6)
 corner_radius_bottom_right = 6
@@ -1378,6 +1382,8 @@ bg_color = Color(0.498039, 0, 0, 0.74902)
 corner_radius_bottom_right = 6
 corner_detail = 1
 anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_131cw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vnsol"]
 content_margin_left = 6.0
@@ -1418,6 +1424,7 @@ Label/constants/shadow_outline_size = 1
 Label/font_sizes/font_size = 16
 Label/fonts/font = SubResource("FontFile_hpk4j")
 Label/styles/normal = SubResource("StyleBoxEmpty_6aued")
+Panel/styles/panel = SubResource("StyleBoxFlat_lvl86")
 ProgressBar/colors/font_color = Color(0.95, 0.95, 0.95, 1)
 ProgressBar/colors/font_outline_color = Color(0, 0, 0, 1)
 ProgressBar/constants/outline_size = 0
@@ -1425,6 +1432,7 @@ ProgressBar/font_sizes/font_size = 16
 ProgressBar/fonts/font = SubResource("FontFile_hpk4j")
 ProgressBar/styles/background = SubResource("StyleBoxFlat_eutg6")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_hx03i")
+ScrollContainer/styles/panel = SubResource("StyleBoxEmpty_131cw")
 VBoxContainer/constants/separation = 0
 VScrollBar/icons/decrement = SubResource("ImageTexture_8ykn7")
 VScrollBar/icons/decrement_highlight = SubResource("ImageTexture_8ykn7")
