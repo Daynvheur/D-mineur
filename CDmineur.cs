@@ -1,6 +1,8 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 public enum ETexture
 {
@@ -30,10 +32,13 @@ public enum Textures
 	ClickMask,
 }
 
+
 public partial class CDmineur : VBoxContainer
 {
 	[Export]
 	public Control? ControlMine { get; set; }
+	private ScaledControl? ScaledControlMine => _scaledControlMine ??= (ScaledControl?)ControlMine;
+	private ScaledControl? _scaledControlMine;
 
 	[Export]
 	public bool isGameOver = false;
@@ -285,8 +290,9 @@ public partial class CDmineur : VBoxContainer
 		//GetWindow().CurrentScreen.;//
 		//GetWindow().;//
 		Window window = GetWindow();
-		Case.Zoom.Moi = zoom;
-		Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
+		//Case.Zoom.Moi = zoom;
+		//Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
+		if (ScaledControlMine != null) ScaledControlMine.CustomScale *= zoom;
 
 		//window.GuiSnapControlsToPixels = true;
 
@@ -394,7 +400,7 @@ public partial class CDmineur : VBoxContainer
 		return (entier, reste);
 	}
 
-	private void InteractionDispatcher(InputEvent @event, Case @case)
+	private async void InteractionDispatcher(InputEvent @event, Case @case)
 	{
 		switch (@event)
 		{
@@ -428,12 +434,22 @@ public partial class CDmineur : VBoxContainer
 				//else
 				if (mouseInput.ButtonIndex == MouseButton.WheelDown && mouseInput.CtrlPressed)
 				{
-					Case.Zoom.Moi -= 0.1f;
+					if (ScaledControlMine is not null)
+					{
+						ScaledControlMine.CustomScale *= (zoom *= 0.9f);
+						ScaledControlMine.CustomMinimumSize *= zoom;
+					}
+					//Case.Zoom.Moi -= 0.1f;
 					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
 				}
 				else if (mouseInput.ButtonIndex == MouseButton.WheelUp && mouseInput.CtrlPressed)
 				{
-					Case.Zoom.Moi += 0.1f;
+					if (ScaledControlMine is not null)
+					{
+						ScaledControlMine.CustomScale *= (zoom *= 1.1f);
+						ScaledControlMine.CustomMinimumSize *= zoom;
+					}
+					//Case.Zoom.Moi += 0.1f;
 					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
 				}
 				else  if (mouseInput.ButtonIndex == MouseButton.Left)

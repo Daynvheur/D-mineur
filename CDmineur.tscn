@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://by77yw448pnwb"]
+[gd_scene load_steps=34 format=3 uid="uid://by77yw448pnwb"]
 
 [ext_resource type="Script" path="res://CDmineur.cs" id="1_egfmi"]
 [ext_resource type="Theme" uid="uid://djr55wnt37rem" path="res://Theme.tres" id="1_prhr1"]
@@ -32,6 +32,7 @@
 [ext_resource type="Texture2D" uid="uid://b1podcenlto3l" path="res://Images/7Hover.png" id="29_rsudg"]
 [ext_resource type="Texture2D" uid="uid://bpahpjr3wpxw0" path="res://Images/8.png" id="30_yrkqr"]
 [ext_resource type="Texture2D" uid="uid://oan7f47fk26u" path="res://Images/8Hover.png" id="31_s83on"]
+[ext_resource type="Script" path="res://ScaledControl.cs" id="33_d5vou"]
 
 [node name="CDmineur" type="VBoxContainer" node_paths=PackedStringArray("ControlMine", "HBoxContainer", "TsslReste", "TsslTotal", "ProgressBar", "TsslGameOver", "TsslTemps", "Timer")]
 anchors_preset = 15
@@ -41,7 +42,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_prhr1")
 script = ExtResource("1_egfmi")
-ControlMine = NodePath("ScrollContainer/Panel")
+ControlMine = NodePath("ScrollContainer/ScaledControl")
 HBoxContainer = NodePath("HBoxContainer")
 TsslReste = NodePath("HBoxContainer/TsslReste")
 TsslTotal = NodePath("HBoxContainer/TsslTotal")
@@ -53,7 +54,6 @@ taillePlateau = Vector2i(30, 16)
 mines = 41
 isSeeded = true
 boucle = true
-zoom = 0.7
 ImagesArray = {
 -5: {
 0: ExtResource("2_t5ite"),
@@ -177,19 +177,20 @@ size_flags_vertical = 3
 theme = ExtResource("1_prhr1")
 follow_focus = true
 
-[node name="Panel" type="Panel" parent="ScrollContainer"]
+[node name="ScaledControl" type="Panel" parent="ScrollContainer"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_prhr1")
+script = ExtResource("33_d5vou")
 
-[node name="PanelCase" type="Panel" parent="ScrollContainer/Panel"]
+[node name="PanelCase" type="Panel" parent="ScrollContainer/ScaledControl"]
 layout_mode = 0
 offset_right = 12.0
 offset_bottom = 12.0
 
-[node name="Panel" type="Panel" parent="ScrollContainer/Panel/PanelCase"]
+[node name="Panel" type="Panel" parent="ScrollContainer/ScaledControl/PanelCase"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
