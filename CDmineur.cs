@@ -36,33 +36,31 @@ public enum Textures
 public partial class CDmineur : VBoxContainer
 {
 	[Export]
-	public Control? ControlMine { get; set; }
-	private ScaledControl? ScaledControlMine => _scaledControlMine ??= (ScaledControl?)ControlMine;
-	private ScaledControl? _scaledControlMine;
+	public Node2D ControlMine { get; set; } = new();
 
 	[Export]
 	public bool isGameOver = false;
 
 	[Export]
-	public HBoxContainer? HBoxContainer { get; set; }
+	public HBoxContainer HBoxContainer { get; set; } = new();
 
 	[Export]
-	public Label? TsslReste { get; set; }
+	public Label TsslReste { get; set; } = new();
 
 	[Export]
-	public Label? TsslTotal { get; set; }
+	public Label TsslTotal { get; set; } = new();
 
 	[Export]
-	public ProgressBar? ProgressBar { get; set; }
+	public ProgressBar ProgressBar { get; set; } = new();
 
 	[Export]
-	public Label? TsslGameOver { get; set; }
+	public Label TsslGameOver { get; set; } = new();
 
 	[Export]
-	public Label? TsslTemps { get; set; }
+	public Label TsslTemps { get; set; } = new();
 
 	[Export]
-	public Timer? Timer { get; set; }
+	public Timer Timer { get; set; } = new();
 
 	[Export]
 	public double elapsedTime = 0;
@@ -87,6 +85,8 @@ public partial class CDmineur : VBoxContainer
 
 	[Export]
 	public float zoom = 1.0f;
+
+	private Vector2 tailleInitialeGrille = Vector2.One;
 
 	[Export]
 	public Dictionary<ETexture, Dictionary<Textures, Resource?>> ImagesArray { get; set; } = new()
@@ -242,15 +242,15 @@ public partial class CDmineur : VBoxContainer
 		{
 			elapsedTime = 0;
 			isGameOver = gameOver;
-			TsslGameOver?.SetVisible(isGameOver);
+			TsslGameOver.SetVisible(isGameOver);
 		};
 		Plateau.RafraîchirMines = (int min, int marques, int max) =>
 		{
-			TsslReste?.SetText((max - marques - min).ToString());
-			TsslTotal?.SetText(max.ToString());
-			ProgressBar?.SetMin(min);
-			ProgressBar?.SetValue(marques);
-			ProgressBar?.SetMax(max);
+			TsslReste.SetText((max - marques - min).ToString());
+			TsslTotal.SetText(max.ToString());
+			ProgressBar.SetMin(min);
+			ProgressBar.SetValue(marques);
+			ProgressBar.SetMax(max);
 		};
 		Plateau.AjouterCase = (Vector2I xy) =>
 		{
@@ -261,7 +261,7 @@ public partial class CDmineur : VBoxContainer
 				StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered,
 			};
 			SetTextures(bouton, ImagesArray[ETexture.Fermee]);
-			ControlMine?.AddChild(bouton);
+			ControlMine.AddChild(bouton);
 			return bouton;
 		};
 		Plateau.MettreTexture = (Case @case) => SetTextures(@case.Image, ImagesArray[@case.estRatée
@@ -281,31 +281,18 @@ public partial class CDmineur : VBoxContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		//if (TsslGameOver != null) TsslGameOver.GuiInput += @event => { Console.WriteLine("bla."); Plateau.RestaurePlateau(); };
-		if (HBoxContainer != null) HBoxContainer.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.Restaure(); elapsedTime = 0; } };
-		//DisplayServer.ScreenGetSize;//
-		//DisplayServer.ScreenGetScale;//Linux+Mac seulement. :(
-		//DisplayServer.WindowGetSize;//
-		//DisplayServer.WindowSetSize;//
-		//GetWindow().CurrentScreen.;//
-		//GetWindow().;//
+		//TsslGameOver.GuiInput += @event => { Console.WriteLine("bla."); Plateau.RestaurePlateau(); };
+		HBoxContainer.GuiInput += @event => { if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) { Plateau.Restaure(); elapsedTime = 0; } };
 		Window window = GetWindow();
-		//Case.Zoom.Moi = zoom;
-		//Case.TailleBase.Moi = (Vector2I)(DisplayServer.ScreenGetSize(window.CurrentScreen) * new Vector2(12.0f / 1920, 12.0f / 1080));
-		if (ScaledControlMine != null) ScaledControlMine.CustomScale *= zoom;
-
-		//window.GuiSnapControlsToPixels = true;
 
 		Plateau.InitialisePlateau(taillePlateau, mines, seed: isSeeded ? seed : null, boucle: boucle, gameOver: isGameOver);
 		Vector2I caseSize = Case.Taille.Moi;
 		Vector2I plateauSize = Plateau.Taille.Moi;
-		if (ControlMine is not null) ControlMine.CustomMinimumSize = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y));// + (int)(HBoxContainer?.Size.Y ?? 0));
-		//Panel p = new();
-		//p.
+		tailleInitialeGrille = plateauSize * caseSize;
+		ControlMine.Scale = Vector2.One * zoom;
+		((Control)ControlMine.GetParent()).CustomMinimumSize = tailleInitialeGrille * zoom; // + (int)(HBoxContainer.Size.Y ?? 0));
 
-		//window.Size = new(plateauSize.X * caseSize.X, (plateauSize.Y * caseSize.Y) + (int)(HBoxContainer?.Size.Y ?? 0));
-		//window.MoveToCenter();
-		Timer?.Start();
+		Timer.Start();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -314,7 +301,7 @@ public partial class CDmineur : VBoxContainer
 		elapsedTime += delta;
 		elapsedTotalTime += delta;
 
-		TsslTemps?.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
+		TsslTemps.SetText(isGameOver ? "(Temps écoulé)" : FormatTime(elapsedTime));
 	}
 
 	private readonly Plateau Plateau = new();
@@ -400,11 +387,10 @@ public partial class CDmineur : VBoxContainer
 		return (entier, reste);
 	}
 
-	private async void InteractionDispatcher(InputEvent @event, Case @case)
+	private void InteractionDispatcher(InputEvent @event, Case @case)
 	{
 		switch (@event)
 		{
-			//case InputEventMouseMotion:
 			//case InputEventMagnifyGesture:
 			//case InputEventPanGesture:
 			//case InputEventScreenDrag:
@@ -424,6 +410,15 @@ public partial class CDmineur : VBoxContainer
 			//		Console.WriteLine($"I'm out {@case.populationId}.");
 			//	}
 			//	break;
+			case InputEventMouseMotion mouseMotion:
+				if ((mouseMotion.ButtonMask & MouseButtonMask.Middle) == MouseButtonMask.Middle)
+				{
+					ScrollContainer scrollContainer = ((ScrollContainer)ControlMine.GetParent().GetParent());
+					var move = mouseMotion.ScreenRelative;// * zoom;
+					scrollContainer.ScrollHorizontal -= (int)move.X;
+					scrollContainer.ScrollVertical -= (int)move.Y;
+				}
+				break;
 
 			case InputEventMouseButton mouseInput:
 				Console.WriteLine($"1Je suis la case {@case.populationId} ! Et mon statut hover est : {@case.Image?.IsHovered()}");
@@ -434,23 +429,56 @@ public partial class CDmineur : VBoxContainer
 				//else
 				if (mouseInput.ButtonIndex == MouseButton.WheelDown && mouseInput.CtrlPressed)
 				{
-					if (ScaledControlMine is not null)
-					{
-						ScaledControlMine.CustomScale *= (zoom *= 0.9f);
-						ScaledControlMine.CustomMinimumSize *= zoom;
-					}
-					//Case.Zoom.Moi -= 0.1f;
-					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
+					zoom -= 0.1f;
+					//var currentScale = ControlMine.Scale;
+					//var mouseCanvasPosition = ControlMine.GetGlobalMousePosition();
+					//var mouseOffset = mouseCanvasPosition - ControlMine.GlobalPosition;
+					//ControlMine.GlobalPosition = mouseCanvasPosition - mouseOffset * zoom;
+					//Console.WriteLine($"mouseCanvasPosition:{mouseCanvasPosition};mouseOffset:{mouseOffset}");
+
+					ControlMine.Scale = Vector2.One * zoom;
+					((Control)ControlMine.GetParent()).CustomMinimumSize = tailleInitialeGrille * zoom;
+					ScrollContainer scrollContainer = ((ScrollContainer)ControlMine.GetParent().GetParent());
+					scrollContainer.ScrollHorizontal -= (int)ControlMine.Scale.X;
+					scrollContainer.ScrollVertical -= (int)ControlMine.Scale.Y;
+
+					mouseInput.Canceled = true;
 				}
 				else if (mouseInput.ButtonIndex == MouseButton.WheelUp && mouseInput.CtrlPressed)
 				{
-					if (ScaledControlMine is not null)
-					{
-						ScaledControlMine.CustomScale *= (zoom *= 1.1f);
-						ScaledControlMine.CustomMinimumSize *= zoom;
-					}
-					//Case.Zoom.Moi += 0.1f;
-					Console.WriteLine($"Les cases ont un zoom de {Case.Zoom.Moi}");
+					zoom += 0.1f;
+					//var currentScale = ControlMine.Scale;
+					var mouseCanvasPosition = ControlMine.GetGlobalMousePosition();
+					var mouseOffset = mouseCanvasPosition - ControlMine.GlobalPosition;
+					//ControlMine.GlobalPosition = mouseCanvasPosition - mouseOffset * zoom;
+					//Console.WriteLine($"mouseCanvasPosition:{mouseCanvasPosition};mouseOffset:{mouseOffset}");
+
+					ControlMine.Scale = Vector2.One * zoom;
+					((Control)ControlMine.GetParent()).CustomMinimumSize = tailleInitialeGrille * zoom;
+					ScrollContainer scrollContainer = ((ScrollContainer)ControlMine.GetParent().GetParent());
+					scrollContainer.ScrollHorizontal += (int)ControlMine.Scale.X;
+					scrollContainer.ScrollVertical += (int)ControlMine.Scale.Y;
+
+					mouseInput.Canceled = true;
+
+					/*
+			{
+				Vector2 mousePos = GetGlobalMousePosition();
+				Vector2 offset = mousePos - GlobalPosition;
+
+				// Calculer le facteur de mise à l'échelle
+				float scaleFactor = mouseEvent.ButtonIndex == (int)ButtonList.WheelUp ? 1.1f : 0.9f;
+
+				// Ajuster la position pour simuler le pivot
+				GlobalPosition = mousePos - offset * scaleFactor;
+
+				// Modifier l'échelle
+				Scale *= new Vector2(scaleFactor, scaleFactor);
+
+				// Ajuster les barres de défilement pour conserver la position relative
+				scrollContainer.ScrollHorizontal += (int)(offset.x * (scaleFactor - 1));
+				scrollContainer.ScrollVertical += (int)(offset.y * (scaleFactor - 1));
+			}*/
 				}
 				else  if (mouseInput.ButtonIndex == MouseButton.Left)
 				{
